@@ -4,6 +4,7 @@ import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { root } from './helpers.js';
+import { trimmedCatalog } from '../scripts/build-site.mjs';
 
 const SECRET_SHAPES = new RegExp(['s' + 'k_(live|test)_', 'gh[po]_[A-Za-z0-9]{20}', 'xox[baprs]-[A-Za-z0-9-]{10}', 'AK' + 'IA[0-9A-Z]{16}', '-----BEGIN [A-Z ]*PRIV' + 'ATE KEY'].join('|'));
 const read = (...p) => readFileSync(join(root, ...p), 'utf8');
@@ -22,7 +23,7 @@ test('the browser copy of the engine matches src (run npm run build)', () => {
     assert.equal(read('public', 'engine', f), read('src', f), `public/engine/${f} is stale`);
   }
   assert.equal(read('public', 'engine', 'registry.json'), read('data', 'registry.json'));
-  assert.equal(read('public', 'engine', 'catalog.snapshot.json'), read('data', 'catalog.snapshot.json'));
+  assert.equal(read('public', 'engine', 'catalog.snapshot.json'), trimmedCatalog());
 });
 
 test('the engine in public/engine runs and gives the same answer as src', async () => {

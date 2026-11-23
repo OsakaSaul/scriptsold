@@ -19,12 +19,23 @@ export const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
 // Escapes text and puts identifiers that contain underscores into code elements.
 export const rich = (s) => esc(s).replace(/[A-Za-z][A-Za-z0-9]*(?:_[A-Za-z0-9]+)+/g, (m) => `<code>${m}</code>`);
 
+// The page only needs the catalog rows the registry maps to (existence, status
+// and credits lookups). The full snapshot stays in data/ for the tests.
+export function trimmedCatalog() {
+  const { registry, catalog } = loadData();
+  const want = new Set();
+  for (const a of registry.apis) for (const e of a.endpoints) if (e.mapping) want.add(`${e.mapping.foxapis.method} ${e.mapping.foxapis.path}`);
+  const endpoints = catalog.endpoints.filter((e) => want.has(`${e.method} ${e.path}`));
+  return JSON.stringify({ ...catalog, trimmed_for_site: 'only the rows the registry maps to', endpoints }, null, 2) + '\n';
+}
+
 export function buildSite() {
   const eng = join(pub, 'engine');
   mkdirSync(eng, { recursive: true });
   for (const f of ENGINE_FILES) copyFileSync(join(root, 'src', f), join(eng, f));
   copyFileSync(join(root, 'data', 'registry.json'), join(eng, 'registry.json'));
-  copyFileSync(join(root, 'data', 'catalog.snapshot.json'), join(eng, 'catalog.snapshot.json'));
+  writeFileSync(join(eng, 'catalog.snapshot.json'), trimmedCatalog());
+  copyFileSync(join(root, 'data', 'foxapis-links.json'), join(eng, 'foxapis-links.json'));
   for (const ex of EXAMPLES) {
     const d = join(pub, 'examples', ex.dir);
     mkdirSync(d, { recursive: true });
@@ -64,7 +75,7 @@ function examplesPage() {
     const api = registry.apis.find((a) => a.name === m.api);
     const ep = api.endpoints.find((e) => e.name === m.endpoint);
     parts.push(`<h3>Field mapping</h3>`);
-    parts.push(`<p>${esc(api.name)} ${esc(statusPhrase(api))}. <a href="${esc(api.source.url)}" rel="noopener">Source notice</a>, read ${esc(api.source.read_on)}.</p>`);
+    parts.push(`<p>${esc(api.name)} ${esc(statusPhrase(api))}. <a href="${esc(api.source.url)}" target="_blank" rel="noopener noreferrer" title="Vendor notice for ${esc(api.name)} (opens in a new tab)" aria-label="Vendor notice for ${esc(api.name)}, opens in a new tab">Source notice</a>, read ${esc(api.source.read_on)}.</p>`);
     if (!ep.mapping) {
       parts.push(`<p>No FoxAPIs equivalent. ${rich(ep.noEquivalentReason)}</p>`);
     } else {
@@ -87,13 +98,13 @@ function examplesPage() {
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<header class="top"><h1>Worked examples</h1><p class="lead">Each example is pre-rendered by the same engine that runs on the front page. <a href="index.html">Back to the paste box</a>.</p></header>
+<header class="top"><h1>Worked examples</h1><p class="lead">Each example is pre-rendered by the same engine that runs on the front page. <a href="index.html" title="Back to the paste box" aria-label="Back to the paste box">Back to the paste box</a>.</p></header>
 <main>
 ${parts.join('\n')}
 </main>
 <footer>
 <p class="disclaimer">Not affiliated with, endorsed by or sponsored by the services named here. Names are used only to say which service your code calls.</p>
-<p>Built with Kiro for Kiroween 2026. Source and licence: <a href="https://github.com/OsakaSaul/scriptsold">github.com/OsakaSaul/scriptsold</a>.</p>
+<p>Built for Kiroween 2026. Source and licence: <a href="https://github.com/OsakaSaul/scriptsold" target="_blank" rel="noopener noreferrer" title="Source code on GitHub (opens in a new tab)" aria-label="Source code on GitHub, opens in a new tab">github.com/OsakaSaul/scriptsold</a>.</p>
 </footer>
 </body>
 </html>

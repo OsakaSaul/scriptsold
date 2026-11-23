@@ -1,0 +1,42 @@
+{
+  "about": "The only FoxAPIs pages the site may link to from a result. Each url was checked with curl -sI (HTTP 200) on the date given. A mapped endpoint with no entry here shows no link. Endpoint entries without their own page point at the matching entry in the FoxAPIs reference, whose element id was read in the live page.",
+  "verified_on": "2026-11-23",
+  "endpoints": [
+    {
+      "path": "/v1/enrich_person",
+      "url": "https://foxapis.com/api/research/enrich_person/",
+      "label": "FoxAPIs page for Enrich person",
+      "check": "HTTP 200 on https://foxapis.com/api/research/enrich_person/"
+    },
+    {
+      "path": "/v1/find_email",
+      "url": "https://foxapis.com/docs/#ep-find-email",
+      "label": "FoxAPIs reference entry for Find email",
+      "check": "HTTP 200 on https://foxapis.com/docs/ and the live page contains id ep-find-email"
+    },
+    {
+      "path": "/v1/get_company_snapshot",
+      "url": "https://foxapis.com/docs/#ep-get-company-snapshot",
+      "label": "FoxAPIs reference entry for Get company snapshot",
+      "check": "HTTP 200 on https://foxapis.com/docs/ and the live page contains id ep-get-company-snapshot"
+    }
+  ],
+  "alternatives": [
+    {
+      "api": "proxycurl",
+      "url": "https://foxapis.com/alternatives/proxycurl/",
+      "label": "FoxAPIs comparison page for Proxycurl",
+      "check": "HTTP 200 on 2026-11-23"
+    },
+    {
+      "api": "clearbit-enrichment",
+      "url": "https://foxapis.com/alternatives/clearbit/",
+      "label": "FoxAPIs comparison page for Clearbit",
+      "check": "HTTP 200 on 2026-11-23"
+    }
+  ],
+  "general": [
+    { "id": "trial", "url": "https://foxapis.com/trial", "label": "Free FoxAPIs key" },
+    { "id": "pricing", "url": "https://foxapis.com/pricing", "label": "FoxAPIs pricing" }
+  ]
+}

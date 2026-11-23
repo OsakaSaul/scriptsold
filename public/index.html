@@ -6,22 +6,47 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>Resurrect: bring dead API calls back to life</title>
-<meta name="description" content="Paste code that calls a shut-down API. See which dead API it calls, get replacement code in JavaScript and Python, and a plain list of what cannot be filled.">
+<meta name="description" content="Paste code that calls a shut-down API. See which dead API it calls, get replacement code in JavaScript and Python, and a plain list of what cannot be filled. It runs in your browser.">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<a class="skip" href="#paste">Skip to the paste box</a>
-<header class="top">
-  <h1>Resurrect</h1>
-  <p class="lead">Paste code that calls an API that has been shut down. Resurrect finds the call, says when and why it ended, and writes the replacement for the matching FoxAPIs endpoint. Where there is no matching endpoint, it says so and leaves your code alone.</p>
+<a class="skip" href="#paste" title="Jump straight to the paste box" aria-label="Skip to the paste box">Skip to the paste box</a>
+
+<header class="hero">
+  <div class="hero-text">
+    <p class="kicker">Kiroween 2026 &middot; Resurrection</p>
+    <h1>Resurrect</h1>
+    <p class="tagline">Your code still calls an API that is dead. Paste it. Watch it come back to life.</p>
+    <p class="lead">Resurrect finds the dead call, says when it ended with a link to the vendor's own notice, and writes the replacement for the matching FoxAPIs endpoint in JavaScript and Python. Where there is no matching endpoint, it says so, and your code stays as it is.</p>
+    <p class="cta"><a class="button" href="#paste" title="Go to the paste box and resurrect some code" aria-label="Resurrect my code: go to the paste box">Resurrect my code</a></p>
+  </div>
+  <div class="graveyard" aria-hidden="true">
+    <div class="moon"></div>
+    <svg class="bat b1" viewBox="0 0 40 20"><path d="M20 10 C16 2 8 0 0 4 C6 6 6 12 10 14 C13 10 16 11 20 17 C24 11 27 10 30 14 C34 12 34 6 40 4 C32 0 24 2 20 10Z"/></svg>
+    <svg class="bat b2" viewBox="0 0 40 20"><path d="M20 10 C16 2 8 0 0 4 C6 6 6 12 10 14 C13 10 16 11 20 17 C24 11 27 10 30 14 C34 12 34 6 40 4 C32 0 24 2 20 10Z"/></svg>
+    <div class="stone">
+      <span class="cross"></span>
+      <span class="rip">R.I.P.</span>
+      <span class="alive">ALIVE</span>
+      <span class="epitaph">your old API call</span>
+      <span class="crack"></span>
+    </div>
+    <div class="ground"></div>
+  </div>
 </header>
+<p class="rip-line" id="rip-line"><span class="dead-word">Rest in peace</span> <span class="arrow" aria-hidden="true">&rarr;</span> <span class="alive-word">resurrected</span></p>
 
 <main>
-  <section aria-labelledby="paste-h" class="coffin">
+  <section aria-labelledby="privacy-h" class="privacy">
+    <h2 id="privacy-h">Nothing you paste is sent anywhere</h2>
+    <p><strong>Nothing you paste is sent anywhere: the rewrite runs in your browser.</strong> The page loads its own script and data files from this site when it opens, and that is the only traffic. Your text is never part of any request, and it is not stored or logged. Anything that looks like a key is replaced before anything else runs.</p>
+  </section>
+
+  <section aria-labelledby="paste-h" class="coffin" id="paste-box">
     <h2 id="paste-h">Your old code</h2>
     <div class="row">
       <label for="lang">Language</label>
-      <select id="lang">
+      <select id="lang" title="Pick the language of the pasted code, or let Resurrect detect it" aria-label="Language of the pasted code">
         <option value="auto">Detect it</option>
         <option value="js">JavaScript</option>
         <option value="ts">TypeScript</option>
@@ -34,15 +59,17 @@
       </select>
     </div>
     <label for="paste" class="sr">Paste your code here</label>
-    <textarea id="paste" rows="14" spellcheck="false" placeholder="Paste a few lines that call the old API"></textarea>
+    <textarea id="paste" rows="14" spellcheck="false" placeholder="Paste a few lines that call the old API" title="Paste the code that calls the dead API. It stays in this page." aria-label="Paste your code that calls the dead API"></textarea>
     <div class="row">
-      <button id="go" type="button">Resurrect</button>
-      <span class="try">Or try an example:</span>
-      <button class="ghost" type="button" data-example="01-proxycurl-person-profile/input.py">Proxycurl, Python</button>
-      <button class="ghost" type="button" data-example="02-clearbit-company/input.js">Clearbit, JavaScript</button>
-      <button class="ghost" type="button" data-example="03-bing-search/input.py">Bing Search, Python</button>
+      <button id="go" type="button" title="Find dead API calls in the pasted code and write the replacement" aria-label="Resurrect the pasted code">Resurrect</button>
+      <button id="clear" class="ghost" type="button" title="Empty the paste box and the result" aria-label="Clear the paste box and the result">Clear</button>
     </div>
-    <p class="small">Your code is processed in this page, in your browser. It is not sent anywhere, stored or logged. Anything that looks like a key is replaced before anything else runs.</p>
+    <div class="row">
+      <span class="try">Or try an example:</span>
+      <button class="chip" type="button" data-example="01-proxycurl-person-profile/input.py" title="Load a Python script that calls Proxycurl and resurrect it" aria-label="Proxycurl, Python: load this example and resurrect it">Proxycurl, Python</button>
+      <button class="chip" type="button" data-example="02-clearbit-company/input.js" title="Load a JavaScript function that calls Clearbit and resurrect it" aria-label="Clearbit, JavaScript: load this example and resurrect it">Clearbit, JavaScript</button>
+      <button class="chip" type="button" data-example="03-bing-search/input.py" title="Load a Python script that calls Bing Search and resurrect it" aria-label="Bing Search, Python: load this example and resurrect it">Bing Search, Python</button>
+    </div>
   </section>
 
   <section id="result" aria-live="polite" aria-labelledby="result-h" tabindex="-1" hidden>
@@ -52,16 +79,32 @@
     <div id="out"></div>
   </section>
 
-  <section class="key">
-    <h2>Try the replacement for real</h2>
-    <p>The replacement code needs a FoxAPIs key in an environment variable. A free key with welcome credits, no card, is at <a href="https://foxapis.com/trial">foxapis.com/trial</a>. The key is never written into the code Resurrect gives you.</p>
-    <p><a href="examples.html">See three worked examples</a>, each with the input, the JavaScript and Python output, and the field-mapping table.</p>
+  <section aria-labelledby="how-h" class="how">
+    <h2 id="how-h">How it works</h2>
+    <ol class="steps">
+      <li><span class="n" aria-hidden="true">1</span><div><h3>Find the corpse</h3><p>It matches the host, the path, the auth style and SDK imports against a list of dated, sourced shutdown notices. A shared host alone is not enough.</p></div></li>
+      <li><span class="n" aria-hidden="true">2</span><div><h3>Check for a heartbeat</h3><p>A call is mapped only if the FoxAPIs endpoint is in the catalog snapshot with status live. Nothing is invented: no endpoint, no parameter, no field.</p></div></li>
+      <li><span class="n" aria-hidden="true">3</span><div><h3>Bring it back</h3><p>You get your file with the old call replaced, standalone JavaScript, Python and curl, a list of what changed, and a field-mapping table. A field FoxAPIs cannot fill comes back as null with the reason.</p></div></li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="yard-h" class="yard">
+    <h2 id="yard-h">The graveyard</h2>
+    <p class="small">Every entry carries the date and the vendor's own notice. The status words are exact: ended, scheduled (still live, end date announced) and moved (no end date published, never called shut down).</p>
+    <ul id="yard-list" class="yard-list"><li>Loading the list of dead and ending APIs...</li></ul>
+    <noscript><p>The list and the paste box need JavaScript, because the rewrite runs in your browser.</p></noscript>
+  </section>
+
+  <section class="key" aria-labelledby="key-h">
+    <h2 id="key-h">Try the replacement for real</h2>
+    <p>The replacement code needs a FoxAPIs key in the environment variable <code>FOXAPIS_KEY</code>. A free key with welcome credits, no card, is at <a href="https://foxapis.com/trial" target="_blank" rel="noopener noreferrer" title="Get a free FoxAPIs key (opens in a new tab)" aria-label="Get a free FoxAPIs key, opens in a new tab">foxapis.com/trial</a>. For what each call costs, see <a href="https://foxapis.com/pricing" target="_blank" rel="noopener noreferrer" title="FoxAPIs pricing (opens in a new tab)" aria-label="FoxAPIs pricing, opens in a new tab">foxapis.com/pricing</a>. The key is never written into the code Resurrect gives you.</p>
+    <p><a href="examples.html" title="Open three worked examples with input, output and field tables" aria-label="See three worked examples">See three worked examples</a>, each with the input, the JavaScript and Python output, and the field-mapping table.</p>
   </section>
 </main>
 
 <footer>
   <p class="disclaimer">Not affiliated with, endorsed by or sponsored by the services named here. Names are used only to say which service your code calls.</p>
-  <p>Built with Kiro for Kiroween 2026. Source and licence: <a href="https://github.com/OsakaSaul/scriptsold">github.com/OsakaSaul/scriptsold</a>.</p>
+  <p>Built for Kiroween 2026. Source and licence (MIT): <a href="https://github.com/OsakaSaul/scriptsold" target="_blank" rel="noopener noreferrer" title="Source code on GitHub (opens in a new tab)" aria-label="Source code on GitHub, opens in a new tab">github.com/OsakaSaul/scriptsold</a>.</p>
 </footer>
 <script type="module" src="app.js"></script>
 </body>

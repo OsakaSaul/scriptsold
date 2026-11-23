@@ -4,6 +4,14 @@ Paste code that calls an API that has been shut down. Resurrect finds the call, 
 
 Kiroween 2026, category Resurrection. License: MIT. Not affiliated with, endorsed by or sponsored by the services named here; names are used only to say which service your code calls.
 
+## Preview address
+
+https://scriptsold.pages.dev (after the deploy step). The scriptsold.com domain is not attached and DNS is not touched.
+
+<!-- deploy-status:start -->
+Status: not deployed yet. Run scripts/deploy-preview.ps1 after the one-time Cloudflare login (see Deploy below).
+<!-- deploy-status:end -->
+
 ## What it does
 
 1. Input: a dead or deprecated API call (a curl command, or JavaScript, TypeScript or Python code).
@@ -33,18 +41,33 @@ npm run build
 
 Replacement code needs a FoxAPIs key in the environment variable FOXAPIS_KEY. A free key: https://foxapis.com/trial. Keys are never written into generated code.
 
+### Open the page locally
+
+Run npm run build once, then open public/index.html through a static server, for example `npx serve public` and visit the address it prints. Opening the file directly does not work, because the page loads its own data files. The paste box needs nothing else: the rewrite runs in the browser and makes no network request.
+
+## Deploy
+
+Steps:
+
+1. One time only, by the owner: run `npx wrangler login` in a terminal (in an assistant session, type an exclamation mark before it: `! npx wrangler login`). A browser opens; click Allow. Nothing in this repository logs in, creates an account or creates a token.
+2. Run `powershell -ExecutionPolicy Bypass -File scripts/deploy-preview.ps1`.
+
+The script stops with exactly that instruction if wrangler is not logged in. Otherwise it runs npm test, rebuilds public/, then runs `npx wrangler pages project create scriptsold --production-branch main` (an existing project is fine) and `npx wrangler pages deploy public --project-name scriptsold --branch main`. Finally it fetches https://scriptsold.pages.dev, checks for HTTP 200 and the engine script tag, and only then changes the status block above to LIVE (and the same block in submission/devpost.md). Until that happens, no document here claims a live site. It never attaches scriptsold.com and never touches DNS.
+
 ## Layout
 
 ```
 .kiro/                  specs, steering and hooks (kept in the repo on purpose)
 data/registry.json      dead-API registry: sources, dates, mappings, field maps
 data/catalog.snapshot.json
+data/foxapis-links.json verified FoxAPIs page links (checked with curl, dated)
 src/                    detect, redact, blocks, emit, fieldtable, resurrect (pure ES modules)
 public/                 static site (index.html, examples.html, engine copy)
 docs/examples/          three worked examples with outputs and mapping tables
 fixtures/foxapis/       recorded real FoxAPIs responses used by the tests
 tests/                  node --test, including property-style tests in tests/properties
-scripts/                snapshot-catalog, build-site, build-examples, check-snapshot
+scripts/                snapshot-catalog, build-site, build-examples, check-snapshot, deploy-preview.ps1
+submission/             Devpost draft, demo script (under 3 minutes), Kiro usage table
 ```
 
 ## Honest limits

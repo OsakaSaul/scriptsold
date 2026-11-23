@@ -8,8 +8,8 @@
   "bin": { "resurrect": "src/cli.js" },
   "engines": { "node": ">=20" },
   "scripts": {
-    "test": "node --test tests/",
-    "test:props": "node --test tests/properties/",
+    "test": "node --test",
+    "test:props": "node --test tests/properties/*.test.js",
     "build": "node scripts/build-site.mjs && node scripts/build-examples.mjs && node scripts/check-snapshot.mjs",
     "check": "node scripts/check-snapshot.mjs",
     "snapshot:catalog": "node scripts/snapshot-catalog.mjs"

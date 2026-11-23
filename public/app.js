@@ -4,11 +4,18 @@ import { fieldRows } from './engine/fieldtable.js';
 const $ = (id) => document.getElementById(id);
 let registry;
 let catalog;
+let links;
 
+// The only network requests this page makes are the GETs below, for its own
+// static files, when the page opens or an example button is pressed. They carry
+// no pasted text. The Resurrect button runs the engine on the text in memory
+// and makes no request at all (tests/privacy.test.js checks this).
 async function load() {
-  const [r, c] = await Promise.all([fetch('engine/registry.json'), fetch('engine/catalog.snapshot.json')]);
+  const [r, c, l] = await Promise.all([fetch('engine/registry.json'), fetch('engine/catalog.snapshot.json'), fetch('engine/foxapis-links.json')]);
   registry = await r.json();
   catalog = await c.json();
+  links = await l.json();
+  yard();
 }
 
 function el(tag, attrs = {}, ...kids) {
@@ -34,20 +41,59 @@ function rich(text) {
   return nodes;
 }
 
+// Every control gets both a tooltip and an accessible name.
+function btn(label, tip, { name, ...attrs } = {}) {
+  return el('button', { type: 'button', title: tip, 'aria-label': name || tip, ...attrs }, label);
+}
+
+function extLink(url, text, tip) {
+  return el('a', { href: url, target: '_blank', rel: 'noopener noreferrer', title: `${tip} (opens in a new tab)`, 'aria-label': `${tip}, opens in a new tab` }, text);
+}
+
+function endpointLink(path) {
+  const hit = links && links.endpoints.find((e) => e.path === path);
+  return hit ? extLink(hit.url, hit.label, hit.label) : null;
+}
+
+function altLink(apiId) {
+  const hit = links && links.alternatives.find((e) => e.api === apiId);
+  return hit ? extLink(hit.url, hit.label, hit.label) : null;
+}
+
+function mappedPath(m) {
+  const api = registry.apis.find((a) => a.id === m.api);
+  const ep = api && api.endpoints.find((e) => e.id === m.endpoint);
+  return ep && ep.mapping ? ep.mapping.foxapis.path : null;
+}
+
+function yard() {
+  const list = $('yard-list');
+  if (!list) return;
+  list.replaceChildren();
+  for (const a of registry.apis) {
+    const when = a.status === 'ended' ? `ended ${a.date}` : a.status === 'scheduled' ? `ending ${a.date}` : 'no end date published';
+    list.append(el('li', {}, el('span', { class: 'nm' }, a.name), el('span', { class: `badge ${a.status}` }, a.status), `${when}. `, extLink(a.source.url, 'Vendor notice', `Vendor notice for ${a.name}`)));
+  }
+}
+
 function card(m, reduced) {
   const state = m.mapped ? 'alive' : m.status === 'ended' ? 'dead' : 'buried';
   const c = el('article', { class: `card ${state}${m.mapped && !reduced ? ' rise' : ''}` });
   const stamp = m.mapped ? 'Resurrected' : m.status === 'ended' ? 'R.I.P.' : m.status === 'scheduled' ? 'Ending soon' : 'Moved';
   c.append(el('span', { class: 'stamp' }, stamp));
   c.append(el('h3', {}, `${m.apiName}${m.endpointName ? ': ' + m.endpointName : ''}`));
-  c.append(el('p', {}, `Line ${m.line}. ${m.label}. `, el('a', { href: m.source, rel: 'noopener' }, 'Source notice')));
-  c.append(el('p', { class: 'small' }, m.mapped ? 'A matching FoxAPIs endpoint exists. Replacement code is below.' : 'Stays buried: no FoxAPIs equivalent. Your code is left as it is.'));
+  c.append(el('p', {}, `Line ${m.line}. ${m.label}. `, extLink(m.source, 'Source notice', `Vendor notice for ${m.apiName}`)));
+  const path = m.mapped ? mappedPath(m) : null;
+  const target = path ? endpointLink(path) : null;
+  const small = el('p', { class: 'small' }, m.mapped ? 'A matching FoxAPIs endpoint exists. Replacement code is below. ' : 'Stays buried: no FoxAPIs equivalent. Your code is left as it is.');
+  if (target) small.append(target);
+  c.append(small);
   c.append(el('div', { class: 'beam', 'aria-hidden': 'true' }));
   return c;
 }
 
 function copyButton(text) {
-  const b = el('button', { type: 'button', class: 'ghost copy' }, 'Copy');
+  const b = btn('Copy', 'Copy this code to the clipboard', { class: 'ghost copy', name: 'Copy this code' });
   b.addEventListener('click', async () => {
     try {
       await navigator.clipboard.writeText(text);
@@ -105,11 +151,19 @@ function render(r) {
       panel.replaceChildren(codePanel(snippet[k]));
     };
     for (const [k, label] of kinds) {
-      const b = el('button', { type: 'button', role: 'tab', 'data-k': k, 'aria-selected': 'false' }, label);
+      const b = btn(label, `Show the ${label} replacement`, { role: 'tab', 'data-k': k, 'aria-selected': 'false', name: `${label} replacement code` });
       b.addEventListener('click', () => show(k));
       tabs.append(b);
     }
-    out.append(el('h3', {}, `Replacement for ${snippet.target}`), el('p', { class: 'small' }, ...rich(snippet.credits)), tabs, panel);
+    const tlink = endpointLink(snippet.target.split(' ')[1]);
+    const alt = altLink(snippet.api);
+    const heading = el('h3', {}, `Replacement for ${snippet.target}`);
+    const refs = el('p', { class: 'small' });
+    if (tlink) refs.append(tlink);
+    if (alt) refs.append(tlink ? ' and ' : '', alt);
+    out.append(heading, el('p', { class: 'small' }, ...rich(snippet.credits)));
+    if (refs.childNodes.length) out.append(refs);
+    out.append(tabs, panel);
     show('js');
     const api = registry.apis.find((a) => a.id === snippet.api);
     const ep = api.endpoints.find((e) => e.id === snippet.endpoint);
@@ -131,6 +185,12 @@ function render(r) {
   res.hidden = false;
   res.focus();
 }
+
+$('clear').addEventListener('click', () => {
+  $('paste').value = '';
+  $('result').hidden = true;
+  $('paste').focus();
+});
 
 $('go').addEventListener('click', () => {
   if (!registry) return;
