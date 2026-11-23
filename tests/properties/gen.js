@@ -29,6 +29,19 @@ const SAMPLE_PATH = {
   'reversecontact-activities/activities': '/v2/activities',
   'dataforseo-pinterest/pinterest': '/v3/business_data/social_media/pinterest/live',
   'lusha-person-v2/person_v2': '/v2/person',
+  'google-custom-search/search': '/customsearch/v1',
+  'google-plus-api/people': '/plus/v1/people/me',
+  'x-v11-search/search': '/1.1/search/tweets.json',
+  'x-v11-statuses-filter/filter': '/1.1/statuses/filter.json',
+  'x-v11-legacy-dm/dm': '/1.1/direct_messages.json',
+  'x-v11-help-configuration/help_configuration': '/1.1/help/configuration.json',
+  'instagram-legacy-api/legacy_v1': '/v1/users/self/media/recent',
+  'crunchbase-v3/organizations': '/v3.1/organizations/stripe',
+  'yahoo-boss/search': '/ysearch/web',
+  'alexa-awis/url_info': '/api',
+  'fullcontact-v2-company/company_lookup': '/v2/company/lookup',
+  'linkedin-open-apis/people_v1': '/v1/people/~',
+  'pinterest-v3-v4/v3_v4': '/v3/pins/123',
 };
 
 export function allCalls() {

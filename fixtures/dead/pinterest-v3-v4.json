@@ -1,0 +1,11 @@
+{
+  "id": "pinterest-v3-v4",
+  "status": "moved",
+  "endpointId": "v3_v4",
+  "mapped": false,
+  "foxapis": null,
+  "sourceUrl": "https://community.pinterest.biz/t/pinterest-api-migration-required-by-june-2023/1374",
+  "deadUrl": "https://api.pinterest.com/v3/pins/123",
+  "liveUrlNotFlagged": "https://api.pinterest.com/v5/pins/123",
+  "note": "deadUrl must be detected as this entry; liveUrlNotFlagged is a live call on the same host that must not be flagged."
+}

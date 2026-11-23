@@ -1,0 +1,11 @@
+{
+  "id": "instagram-legacy-api",
+  "status": "ended",
+  "endpointId": "legacy_v1",
+  "mapped": false,
+  "foxapis": null,
+  "sourceUrl": "https://developers.facebook.com/blog/post/2020/03/10/final-reminder-Instagram-legacy-api-platform-disabled-mar-31/",
+  "deadUrl": "https://api.instagram.com/v1/users/self/media/recent",
+  "liveUrlNotFlagged": "https://graph.facebook.com/v19.0/me",
+  "note": "deadUrl must be detected as this entry; liveUrlNotFlagged is a live call on the same host that must not be flagged."
+}

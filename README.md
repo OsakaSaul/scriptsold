@@ -23,9 +23,9 @@ Status words are exact: ended (the vendor's notice says it ended), scheduled (st
 
 ## Providers in the registry
 
-Ended: Proxycurl, Clearbit Logo API, Bing Search APIs, Instagram Basic Display API, Reverse Contact legacy person routes and Activities, DataForSEO Pinterest and Social Media APIs. Scheduled: Lusha Person API v2. Moved: Clearbit Enrichment.
+Ended: Proxycurl, Clearbit Logo API, Bing Search APIs, Instagram Basic Display API, Instagram legacy API, Reverse Contact legacy person routes and Activities, DataForSEO Pinterest and Social Media APIs, Google+ API, Crunchbase API v3.1, Yahoo BOSS, Alexa Web Information Service, FullContact v2 Company API, X API v1.1 legacy Direct Message and help/configuration endpoints. Scheduled: Lusha Person API v2, Google Custom Search JSON API (1 January 2027). Moved (deprecation or access change, no shutdown): Clearbit Enrichment, X API v1.1 search and statuses/filter, LinkedIn open APIs, Pinterest API v3 and v4. 22 entries; each new one with its date and source is in docs/REGISTRY.md.
 
-Mapped to FoxAPIs: Proxycurl person profile, work email and person lookup; Clearbit company and person enrichment (company is marked partial); Lusha person v2 (request side only). Everything else in the registry is reported honestly as having no equivalent.
+Mapped to FoxAPIs (10 endpoints, all partial or request side only where stated): Proxycurl person profile, work email and person lookup; Clearbit company and person enrichment; Lusha person v2; Crunchbase v3.1 organizations and FullContact v2 company (to the company snapshot); LinkedIn v1 people (to enrich person); Alexa UrlInfo (to SimilarWeb domain data). Everything else (29 endpoints in total across the registry) is reported honestly as having no equivalent.
 
 ## Run it
 

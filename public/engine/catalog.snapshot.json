@@ -6,6 +6,13 @@
   "live": 153,
   "endpoints": [
     {
+      "path": "/v1/brand/similarweb/domain",
+      "method": "POST",
+      "status": "live",
+      "credits": null,
+      "credits_source": null
+    },
+    {
       "path": "/v1/enrich_person",
       "method": "POST",
       "status": "live",

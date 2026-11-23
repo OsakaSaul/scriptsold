@@ -1,0 +1,11 @@
+{
+  "id": "google-plus-api",
+  "status": "ended",
+  "endpointId": "people",
+  "mapped": false,
+  "foxapis": null,
+  "sourceUrl": "https://developers.google.com/+/api-shutdown",
+  "deadUrl": "https://www.googleapis.com/plus/v1/people/me",
+  "liveUrlNotFlagged": "https://www.googleapis.com/calendar/v3/calendars",
+  "note": "deadUrl must be detected as this entry; liveUrlNotFlagged is a live call on the same host that must not be flagged."
+}

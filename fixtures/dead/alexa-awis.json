@@ -1,0 +1,14 @@
+{
+  "id": "alexa-awis",
+  "status": "ended",
+  "endpointId": "url_info",
+  "mapped": true,
+  "foxapis": {
+    "path": "/v1/brand/similarweb/domain",
+    "method": "POST"
+  },
+  "sourceUrl": "https://www.securityweek.com/impact-alexa-ranking-service-shutdown-cybersecurity-industry",
+  "deadUrl": "https://awis.us-west-1.amazonaws.com/api?Action=UrlInfo",
+  "liveUrlNotFlagged": "https://s3.amazonaws.com/bucket/key",
+  "note": "deadUrl must be detected as this entry; liveUrlNotFlagged is a live call on the same host that must not be flagged."
+}

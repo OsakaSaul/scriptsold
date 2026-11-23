@@ -19,6 +19,12 @@
       "url": "https://foxapis.com/docs/#ep-get-company-snapshot",
       "label": "FoxAPIs reference entry for Get company snapshot",
       "check": "HTTP 200 on https://foxapis.com/docs/ and the live page contains id ep-get-company-snapshot"
+    },
+    {
+      "path": "/v1/brand/similarweb/domain",
+      "url": "https://foxapis.com/docs/",
+      "label": "FoxAPIs reference (shows this call)",
+      "check": "HTTP 200 on https://foxapis.com/docs/ and the live page contains the text brand/similarweb/domain, 2026-11-23"
     }
   ],
   "alternatives": [
@@ -36,7 +42,15 @@
     }
   ],
   "general": [
-    { "id": "trial", "url": "https://foxapis.com/trial", "label": "Free FoxAPIs key" },
-    { "id": "pricing", "url": "https://foxapis.com/pricing", "label": "FoxAPIs pricing" }
+    {
+      "id": "trial",
+      "url": "https://foxapis.com/trial",
+      "label": "Free FoxAPIs key"
+    },
+    {
+      "id": "pricing",
+      "url": "https://foxapis.com/pricing",
+      "label": "FoxAPIs pricing"
+    }
   ]
 }

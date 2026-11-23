@@ -1,0 +1,14 @@
+{
+  "id": "crunchbase-v3",
+  "status": "ended",
+  "endpointId": "organizations",
+  "mapped": true,
+  "foxapis": {
+    "path": "/v1/get_company_snapshot",
+    "method": "POST"
+  },
+  "sourceUrl": "https://data.crunchbase.com/docs/api-release-history",
+  "deadUrl": "https://api.crunchbase.com/v3.1/organizations/stripe",
+  "liveUrlNotFlagged": "https://api.crunchbase.com/api/v4/entities/organizations/stripe",
+  "note": "deadUrl must be detected as this entry; liveUrlNotFlagged is a live call on the same host that must not be flagged."
+}

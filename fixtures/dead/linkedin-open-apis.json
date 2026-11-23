@@ -1,0 +1,14 @@
+{
+  "id": "linkedin-open-apis",
+  "status": "moved",
+  "endpointId": "people_v1",
+  "mapped": true,
+  "foxapis": {
+    "path": "/v1/enrich_person",
+    "method": "POST"
+  },
+  "sourceUrl": "https://www.computerworld.com/article/1637984/linkedin-restricts-api-usage.html",
+  "deadUrl": "https://api.linkedin.com/v1/people/~",
+  "liveUrlNotFlagged": "https://api.linkedin.com/v2/userinfo",
+  "note": "deadUrl must be detected as this entry; liveUrlNotFlagged is a live call on the same host that must not be flagged."
+}

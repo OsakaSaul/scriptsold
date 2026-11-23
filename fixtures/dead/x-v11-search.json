@@ -1,0 +1,11 @@
+{
+  "id": "x-v11-search",
+  "status": "moved",
+  "endpointId": "search",
+  "mapped": false,
+  "foxapis": null,
+  "sourceUrl": "https://docs.x.com/changelog",
+  "deadUrl": "https://api.twitter.com/1.1/search/tweets.json?q=x",
+  "liveUrlNotFlagged": "https://api.twitter.com/2/tweets/search/recent?query=x",
+  "note": "deadUrl must be detected as this entry; liveUrlNotFlagged is a live call on the same host that must not be flagged."
+}

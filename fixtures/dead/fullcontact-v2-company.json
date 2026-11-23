@@ -1,0 +1,14 @@
+{
+  "id": "fullcontact-v2-company",
+  "status": "ended",
+  "endpointId": "company_lookup",
+  "mapped": true,
+  "foxapis": {
+    "path": "/v1/get_company_snapshot",
+    "method": "POST"
+  },
+  "sourceUrl": "https://docs.fullcontact.com/docs/v2-company-domain-lookup-migration",
+  "deadUrl": "https://api.fullcontact.com/v2/company/lookup.json?domain=stripe.com",
+  "liveUrlNotFlagged": "https://api.fullcontact.com/v3/company.enrich",
+  "note": "deadUrl must be detected as this entry; liveUrlNotFlagged is a live call on the same host that must not be flagged."
+}

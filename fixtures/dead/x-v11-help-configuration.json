@@ -1,0 +1,11 @@
+{
+  "id": "x-v11-help-configuration",
+  "status": "ended",
+  "endpointId": "help_configuration",
+  "mapped": false,
+  "foxapis": null,
+  "sourceUrl": "https://docs.x.com/changelog",
+  "deadUrl": "https://api.twitter.com/1.1/help/configuration.json",
+  "liveUrlNotFlagged": "https://api.twitter.com/2/users/me",
+  "note": "deadUrl must be detected as this entry; liveUrlNotFlagged is a live call on the same host that must not be flagged."
+}

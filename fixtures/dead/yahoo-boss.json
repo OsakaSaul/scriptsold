@@ -1,0 +1,11 @@
+{
+  "id": "yahoo-boss",
+  "status": "ended",
+  "endpointId": "search",
+  "mapped": false,
+  "foxapis": null,
+  "sourceUrl": "https://thenextweb.com/news/yahoo-killing-off-products-sidelining-search-access-developers",
+  "deadUrl": "https://yboss.yahooapis.com/ysearch/web?q=x",
+  "liveUrlNotFlagged": "https://query1.finance.yahoo.com/v7/finance/quote",
+  "note": "deadUrl must be detected as this entry; liveUrlNotFlagged is a live call on the same host that must not be flagged."
+}
