@@ -1,0 +1,1080 @@
+{
+ "generated_by": "scripts/snapshot-catalog.mjs",
+ "generated_on": "2026-11-23",
+ "source": "FoxAPIs catalog.json (route list) and, where given, its endpoint credit table",
+ "total": 153,
+ "live": 153,
+ "endpoints": [
+  {
+   "path": "/account",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/account/admin",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/account/admin/adjust",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/account/admin/endpoints",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/account/admin/funnel",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/account/admin/grant",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/account/admin/overview",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/account/admin/usage",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/account/admin/user/{customer_id}",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/account/admin/users",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/account/admin/welcome",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/account/keys/rotate",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/auth/github/callback",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/auth/github/config",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/auth/github/start",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/auth/google/callback",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/auth/google/config",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/auth/google/start",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/auth/login",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/auth/logout",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/auth/verify",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/batch",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/billing/autotopup",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/billing/checkout",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/billing/monthly-limit",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/billing/state",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/billing/topup",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/billing/topup/options",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/changelog/cadence",
+   "method": "POST",
+   "status": "live",
+   "credits": 0,
+   "credits_source": "catalog"
+  },
+  {
+   "path": "/changelog/product",
+   "method": "POST",
+   "status": "live",
+   "credits": 0,
+   "credits_source": "catalog"
+  },
+  {
+   "path": "/chat/render",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/chat/styles",
+   "method": "GET",
+   "status": "live",
+   "credits": 0,
+   "credits_source": "catalog"
+  },
+  {
+   "path": "/connect/mentionfox/redeem",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/connect/mentionfox/status",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/dates",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/demo/call",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/demo/free-runs",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/extract",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/health",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/intent",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/internal/autotopup/run",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/launch/directories",
+   "method": "GET",
+   "status": "live",
+   "credits": 1,
+   "credits_source": "catalog"
+  },
+  {
+   "path": "/launch/release_history",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/launch/release_history",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/meta",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/outreach/linkedin",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/outreach/linkedin/connect",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/outreach/reddit",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/outreach/reddit/connect",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/outreach/status/{customer_id}",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/outreach/telegram",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/outreach/telegram/connect",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/outreach/twitter",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/outreach/twitter/connect",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/outreach/whatsapp",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/outreach/whatsapp/confirm",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/outreach/whatsapp/connect",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/platform",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/screenshot",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/shipped/week",
+   "method": "POST",
+   "status": "live",
+   "credits": 0,
+   "credits_source": "catalog"
+  },
+  {
+   "path": "/showhn/best_time",
+   "method": "GET",
+   "status": "live",
+   "credits": 1,
+   "credits_source": "catalog"
+  },
+  {
+   "path": "/showhn/post_outcome",
+   "method": "GET",
+   "status": "live",
+   "credits": 1,
+   "credits_source": "catalog"
+  },
+  {
+   "path": "/signup/trial",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/smart-extract",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/ai-visibility/brand-audit",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/ai-visibility/gemini/answer",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/ai-visibility/grok/answer",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/ai-visibility/perplexity/answer",
+   "method": "POST",
+   "status": "live",
+   "credits": 5,
+   "credits_source": "catalog"
+  },
+  {
+   "path": "/v1/augment/export",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/augment/lead",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/augment/preview",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/augment/teardown",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/brand/capterra/product",
+   "method": "POST",
+   "status": "live",
+   "credits": 2,
+   "credits_source": "catalog"
+  },
+  {
+   "path": "/v1/brand/g2/product",
+   "method": "POST",
+   "status": "live",
+   "credits": 2,
+   "credits_source": "catalog"
+  },
+  {
+   "path": "/v1/brand/producthunt/product",
+   "method": "POST",
+   "status": "live",
+   "credits": 2,
+   "credits_source": "catalog"
+  },
+  {
+   "path": "/v1/brand/reddit/brand-mentions",
+   "method": "POST",
+   "status": "live",
+   "credits": 3,
+   "credits_source": "catalog"
+  },
+  {
+   "path": "/v1/brand/similarweb/domain",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/brand/trustpilot/company",
+   "method": "POST",
+   "status": "live",
+   "credits": 2,
+   "credits_source": "catalog"
+  },
+  {
+   "path": "/v1/bulk_candidate_compare",
+   "method": "POST",
+   "status": "live",
+   "credits": 5,
+   "credits_source": "code"
+  },
+  {
+   "path": "/v1/candidate_compare",
+   "method": "POST",
+   "status": "live",
+   "credits": 5,
+   "credits_source": "code"
+  },
+  {
+   "path": "/v1/candidate_evaluate",
+   "method": "POST",
+   "status": "live",
+   "credits": 50,
+   "credits_source": "measured"
+  },
+  {
+   "path": "/v1/companies/search",
+   "method": "GET",
+   "status": "live",
+   "credits": 2,
+   "credits_source": "measured"
+  },
+  {
+   "path": "/v1/companies/{company_number}",
+   "method": "GET",
+   "status": "live",
+   "credits": 2,
+   "credits_source": "code"
+  },
+  {
+   "path": "/v1/compare_people",
+   "method": "POST",
+   "status": "live",
+   "credits": 5,
+   "credits_source": "code"
+  },
+  {
+   "path": "/v1/contact/find",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/content/podcast/episode",
+   "method": "POST",
+   "status": "live",
+   "credits": 2,
+   "credits_source": "measured"
+  },
+  {
+   "path": "/v1/content/substack/post",
+   "method": "POST",
+   "status": "live",
+   "credits": 2,
+   "credits_source": "measured"
+  },
+  {
+   "path": "/v1/content/substack/publication",
+   "method": "POST",
+   "status": "live",
+   "credits": 2,
+   "credits_source": "measured"
+  },
+  {
+   "path": "/v1/creator/verdict_report",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/debug/soundcloud-env",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/demo/status",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/demo/try",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/developer/huggingface/model",
+   "method": "POST",
+   "status": "live",
+   "credits": 2,
+   "credits_source": "measured"
+  },
+  {
+   "path": "/v1/developer/stackoverflow/question",
+   "method": "POST",
+   "status": "live",
+   "credits": 2,
+   "credits_source": "measured"
+  },
+  {
+   "path": "/v1/developer/stackoverflow/user",
+   "method": "POST",
+   "status": "live",
+   "credits": 1,
+   "credits_source": "measured"
+  },
+  {
+   "path": "/v1/ecommerce/shopify/store",
+   "method": "POST",
+   "status": "live",
+   "credits": 2,
+   "credits_source": "measured"
+  },
+  {
+   "path": "/v1/enrich_person",
+   "method": "POST",
+   "status": "live",
+   "credits": 100,
+   "credits_source": "measured"
+  },
+  {
+   "path": "/v1/exec_compare",
+   "method": "POST",
+   "status": "live",
+   "credits": 5,
+   "credits_source": "code"
+  },
+  {
+   "path": "/v1/find_contact",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/find_email",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/gaming/chess/player",
+   "method": "POST",
+   "status": "live",
+   "credits": 1,
+   "credits_source": "measured"
+  },
+  {
+   "path": "/v1/gaming/lichess/player",
+   "method": "POST",
+   "status": "live",
+   "credits": 1,
+   "credits_source": "measured"
+  },
+  {
+   "path": "/v1/generate_sales_dossier",
+   "method": "POST",
+   "status": "live",
+   "credits": 30,
+   "credits_source": "measured"
+  },
+  {
+   "path": "/v1/geo/check",
+   "method": "POST",
+   "status": "live",
+   "credits": 30,
+   "credits_source": "measured"
+  },
+  {
+   "path": "/v1/geo/citation-rate",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/geo/gaps",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/geo/heatmap",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/geo/share-of-voice",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/geo/train",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/get_company_report",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/get_company_snapshot",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/get_dossier",
+   "method": "POST",
+   "status": "live",
+   "credits": 30,
+   "credits_source": "measured"
+  },
+  {
+   "path": "/v1/get_entrepreneur_report",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/get_investor_report",
+   "method": "POST",
+   "status": "live",
+   "credits": 200,
+   "credits_source": "code"
+  },
+  {
+   "path": "/v1/get_investor_snapshot",
+   "method": "POST",
+   "status": "live",
+   "credits": 30,
+   "credits_source": "code"
+  },
+  {
+   "path": "/v1/investors/search",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/investors/{investor_id}/enrich",
+   "method": "POST",
+   "status": "live",
+   "credits": 0,
+   "credits_source": "catalog"
+  },
+  {
+   "path": "/v1/jobs/{job_id}",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/labor/bls/salary",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/music/lastfm/artist",
+   "method": "POST",
+   "status": "live",
+   "credits": 1,
+   "credits_source": "measured"
+  },
+  {
+   "path": "/v1/music/soundcloud/artist",
+   "method": "POST",
+   "status": "live",
+   "credits": 2,
+   "credits_source": "measured"
+  },
+  {
+   "path": "/v1/osint/wayback/domain",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/patents/uspto/search",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/science/biorxiv/preprints",
+   "method": "POST",
+   "status": "live",
+   "credits": 5,
+   "credits_source": "billed"
+  },
+  {
+   "path": "/v1/science/clinicaltrials/search",
+   "method": "POST",
+   "status": "live",
+   "credits": 5,
+   "credits_source": "billed"
+  },
+  {
+   "path": "/v1/science/fda/approvals",
+   "method": "POST",
+   "status": "live",
+   "credits": 5,
+   "credits_source": "billed"
+  },
+  {
+   "path": "/v1/science/pubmed/search",
+   "method": "POST",
+   "status": "live",
+   "credits": 5,
+   "credits_source": "billed"
+  },
+  {
+   "path": "/v1/score_intent",
+   "method": "POST",
+   "status": "live",
+   "credits": 2,
+   "credits_source": "measured"
+  },
+  {
+   "path": "/v1/social/bluesky/post",
+   "method": "POST",
+   "status": "live",
+   "credits": 2,
+   "credits_source": "code"
+  },
+  {
+   "path": "/v1/social/facebook/post",
+   "method": "POST",
+   "status": "live",
+   "credits": 3,
+   "credits_source": "catalog"
+  },
+  {
+   "path": "/v1/social/instagram/post",
+   "method": "POST",
+   "status": "live",
+   "credits": 4,
+   "credits_source": "catalog"
+  },
+  {
+   "path": "/v1/social/instagram/reel",
+   "method": "POST",
+   "status": "live",
+   "credits": 4,
+   "credits_source": "catalog"
+  },
+  {
+   "path": "/v1/social/linkedin/post",
+   "method": "POST",
+   "status": "live",
+   "credits": 4,
+   "credits_source": "catalog"
+  },
+  {
+   "path": "/v1/social/mastodon/post",
+   "method": "POST",
+   "status": "live",
+   "credits": 2,
+   "credits_source": "measured"
+  },
+  {
+   "path": "/v1/social/reddit/post",
+   "method": "POST",
+   "status": "live",
+   "credits": 3,
+   "credits_source": "catalog"
+  },
+  {
+   "path": "/v1/social/reddit/subreddit",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/social/reddit/user",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/social/tiktok/video",
+   "method": "POST",
+   "status": "live",
+   "credits": 4,
+   "credits_source": "catalog"
+  },
+  {
+   "path": "/v1/social/twitch/channel",
+   "method": "POST",
+   "status": "live",
+   "credits": 2,
+   "credits_source": "measured"
+  },
+  {
+   "path": "/v1/talent/indeed/job",
+   "method": "POST",
+   "status": "live",
+   "credits": 4,
+   "credits_source": "catalog"
+  },
+  {
+   "path": "/v1/talent/monster/job",
+   "method": "POST",
+   "status": "live",
+   "credits": 2,
+   "credits_source": "catalog"
+  },
+  {
+   "path": "/v1/talent/tools-detector",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/talent/ziprecruiter/job",
+   "method": "POST",
+   "status": "live",
+   "credits": 3,
+   "credits_source": "catalog"
+  },
+  {
+   "path": "/v1/util/batch",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/util/health",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/util/platforms",
+   "method": "GET",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/v1/vet_person",
+   "method": "POST",
+   "status": "live",
+   "credits": 30,
+   "credits_source": "measured"
+  },
+  {
+   "path": "/v1/visual/flickr/photo",
+   "method": "POST",
+   "status": "live",
+   "credits": 2,
+   "credits_source": "catalog"
+  },
+  {
+   "path": "/v1/visual/imgur/image",
+   "method": "POST",
+   "status": "live",
+   "credits": 2,
+   "credits_source": "catalog"
+  },
+  {
+   "path": "/v1/visual/pinterest/pin",
+   "method": "POST",
+   "status": "live",
+   "credits": 2,
+   "credits_source": "measured"
+  },
+  {
+   "path": "/video/launch",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/vision-extract",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  },
+  {
+   "path": "/webhook/stripe",
+   "method": "POST",
+   "status": "live",
+   "credits": null,
+   "credits_source": null
+  }
+ ]
+}

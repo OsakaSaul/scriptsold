@@ -1,0 +1,94 @@
+{
+  "input": "input.js",
+  "language": "js",
+  "matches": [
+    {
+      "api": "Clearbit Enrichment",
+      "endpoint": "Company enrichment (by domain)",
+      "line": 5,
+      "status": "moved into another product (no end date published)",
+      "source": "https://clearbit.com/",
+      "mapped": true,
+      "evidence": [
+        "host company.clearbit.com",
+        "path /v2/companies/find"
+      ]
+    }
+  ],
+  "changes": [
+    "Clearbit Enrichment Company enrichment (by domain): domain -> domain (copied)"
+  ],
+  "unfilled": [
+    {
+      "field": "name",
+      "reason": "not claimed: a similar field (subject_name) appears in a FoxAPIs company report sample, but no snapshot sample was captured to confirm it",
+      "api": "clearbit-enrichment",
+      "endpoint": "company_find"
+    },
+    {
+      "field": "domain",
+      "reason": "FoxAPIs does not return a domain field; use the one you sent",
+      "api": "clearbit-enrichment",
+      "endpoint": "company_find"
+    },
+    {
+      "field": "legalName",
+      "reason": "no equivalent field",
+      "api": "clearbit-enrichment",
+      "endpoint": "company_find"
+    },
+    {
+      "field": "description",
+      "reason": "the snapshot has written sections, not one description field",
+      "api": "clearbit-enrichment",
+      "endpoint": "company_find"
+    },
+    {
+      "field": "foundedYear",
+      "reason": "no equivalent field",
+      "api": "clearbit-enrichment",
+      "endpoint": "company_find"
+    },
+    {
+      "field": "category (sector, industry)",
+      "reason": "no equivalent field",
+      "api": "clearbit-enrichment",
+      "endpoint": "company_find"
+    },
+    {
+      "field": "metrics (employees, raised, revenue)",
+      "reason": "no equivalent field; figures appear only inside written sections",
+      "api": "clearbit-enrichment",
+      "endpoint": "company_find"
+    },
+    {
+      "field": "location, geo",
+      "reason": "no equivalent field",
+      "api": "clearbit-enrichment",
+      "endpoint": "company_find"
+    },
+    {
+      "field": "logo",
+      "reason": "no equivalent field",
+      "api": "clearbit-enrichment",
+      "endpoint": "company_find"
+    },
+    {
+      "field": "linkedin, twitter, facebook, crunchbase handles",
+      "reason": "no equivalent field on the company call",
+      "api": "clearbit-enrichment",
+      "endpoint": "company_find"
+    },
+    {
+      "field": "tech, tags",
+      "reason": "no equivalent field",
+      "api": "clearbit-enrichment",
+      "endpoint": "company_find"
+    }
+  ],
+  "unmapped": [],
+  "notes": [
+    "Clearbit Enrichment Company enrichment (by domain): PARTIAL. get_company_snapshot answers with a written due-diligence snapshot (async: 202, then poll), not company fields. The generated code returns that snapshot unchanged. Almost no old field can be filled; the table says which.",
+    "Clearbit Enrichment: moved into another product (no end date published)."
+  ]
+}

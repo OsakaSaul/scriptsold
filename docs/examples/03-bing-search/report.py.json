@@ -1,0 +1,30 @@
+{
+  "input": "input.py",
+  "language": "py",
+  "matches": [
+    {
+      "api": "Bing Search APIs",
+      "endpoint": "Web Search",
+      "line": 9,
+      "status": "shut down on 2025-08-11",
+      "source": "https://learn.microsoft.com/en-us/lifecycle/announcements/bing-search-api-retirement",
+      "mapped": false,
+      "evidence": [
+        "host api.bing.microsoft.com",
+        "path /v7.0/search",
+        "auth header style matches"
+      ]
+    }
+  ],
+  "changes": [],
+  "unfilled": [],
+  "unmapped": [
+    {
+      "api": "bing-search",
+      "endpoint": "search",
+      "reason": "There is no web search endpoint in the FoxAPIs catalog. Follow Microsoft's own notice for what replaces it.",
+      "source": "https://learn.microsoft.com/en-us/lifecycle/announcements/bing-search-api-retirement"
+    }
+  ],
+  "notes": []
+}

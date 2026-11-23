@@ -1,0 +1,111 @@
+{
+ "_about": "Real FoxAPIs response for POST /v1/enrich_person (light mode), captured 2026-11-22 and published as a sample on the FoxAPIs enrich_person page. The long deeper_dossier list is trimmed.",
+ "request": {
+  "method": "POST",
+  "path": "/v1/enrich_person",
+  "body": {
+   "name": "Satya Nadella",
+   "company": "Microsoft",
+   "domain": "microsoft.com"
+  }
+ },
+ "run": {
+  "http_status": 200,
+  "ms": 8581,
+  "credits": 100
+ },
+ "response": {
+  "success": true,
+  "profile": {
+   "full_name": "Satya Nadella",
+   "employer": "Microsoft",
+   "title": "",
+   "overall_confidence": 0.29,
+   "linkedin_url": "https://www.linkedin.com/in/satyanadella",
+   "twitter_url": "https://x.com/satyanadella",
+   "twitter_handle": "@satyanadella",
+   "github_url": "https://github.com/satyanadella",
+   "github_username": "satyanadella",
+   "instagram_url": "",
+   "youtube_url": "",
+   "mastodon_url": "",
+   "crunchbase_url": "",
+   "wikipedia_url": "",
+   "wellfound_url": "",
+   "medium_url": "",
+   "substack_url": "",
+   "threads_url": "",
+   "theorg_url": "",
+   "warpcast_url": "",
+   "photo_url": "",
+   "emails": [
+    {
+     "email": "satya@microsoft.com",
+     "status": "verified",
+     "checked": true,
+     "checked_at": "2026-11-22T13:31:33+00:00"
+    }
+   ],
+   "phones": [
+    {
+     "phone": "(503) 443-7070",
+     "source_url": "https://news.microsoft.com/source/exec/satya-nadella/"
+    }
+   ],
+   "employment_history": [],
+   "education": [],
+   "news_mentions": [],
+   "identity_verification": {
+    "confidence": "LOW",
+    "confidence_score": 29,
+    "matched_on": [
+     "employer named with the person in 3 independent sources",
+     "role at that employer"
+    ],
+    "identity_line": "Matched on: employer named with the person in 3 independent sources; role at that employer.",
+    "set_aside_line": null,
+    "legacy_source_count_confidence": "HIGH",
+    "legacy_consistency_score": 90,
+    "sources_found": 8,
+    "social_profiles_found": 3,
+    "emails_found": 5,
+    "has_employment_history": false,
+    "has_news_mentions": false,
+    "stock_photo_detected": false,
+    "photo_url_checked": false,
+    "social_proof": "Matched on: employer named with the person in 3 independent sources; role at that employer.",
+    "flags": []
+   },
+   "enriched_at": "2026-11-22T13:31:29.600Z",
+   "enrichment_version": "1.5",
+   "enrichment_mode": "light",
+   "source_count": 9,
+   "sourcing_filter": {
+    "phones_dropped": 0,
+    "gifts_moved": 0,
+    "gifts_unverified": 0,
+    "figures_removed": 0,
+    "figures_marked": 0
+   },
+   "summary": "Satya Nadella works at Microsoft.",
+   "deeper_dossier": {
+    "available": true,
+    "reason": "This dossier was built at standard depth. The sections listed here are absent because they are not produced at this depth — not because they were checked and found empty. A deeper dossier adds them.",
+    "adds_section_count": 30,
+    "adds_sections": [
+     {
+      "key": "public_communication",
+      "label": "How they communicate in public"
+     },
+     {
+      "key": "behavioral",
+      "label": "Communication cheat sheet"
+     }
+    ],
+    "action": "vetter_auto_dossier",
+    "credits": 60
+   }
+  },
+  "credits_used": 100
+ }
+}

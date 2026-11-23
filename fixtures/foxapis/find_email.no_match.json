@@ -1,0 +1,5 @@
+{
+ "_about": "Real FoxAPIs response for POST /v1/find_email with a company website and a name that matches nobody, captured 2026-11-23 with a test key through the generated JavaScript and the generated Python. It cost 0 credits.",
+ "request": { "method": "POST", "path": "/v1/find_email", "body": { "website": "example.com", "name": "Zqxv Wplk" } },
+ "response": { "success": false, "email": null, "reason": "no_email_found", "credits_used": 0 }
+}

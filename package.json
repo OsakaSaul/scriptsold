@@ -1,0 +1,17 @@
+{
+  "name": "scriptsold",
+  "version": "0.1.0",
+  "description": "Resurrect: paste code that calls a dead API, get drop-in FoxAPIs code in JavaScript and Python, plus an honest field-mapping table.",
+  "type": "module",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/OsakaSaul/scriptsold.git" },
+  "bin": { "resurrect": "src/cli.js" },
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node --test tests/",
+    "test:props": "node --test tests/properties/",
+    "build": "node scripts/build-site.mjs && node scripts/build-examples.mjs && node scripts/check-snapshot.mjs",
+    "check": "node scripts/check-snapshot.mjs",
+    "snapshot:catalog": "node scripts/snapshot-catalog.mjs"
+  }
+}

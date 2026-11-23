@@ -1,0 +1,347 @@
+{
+  "about": "Dead and deprecated API registry. An entry exists only with a source url. Status: ended, scheduled (still live, end date announced) or moved (no end date published; shown as moved, never as shut down). Sources were read on the dates given.",
+  "apis": [
+    {
+      "id": "proxycurl",
+      "name": "Proxycurl",
+      "status": "ended",
+      "date": "2025-07-04",
+      "summary": "The whole service was shut down. The vendor's founder post says LinkedIn filed a lawsuit in January 2025 and that closing Proxycurl was needed to comply with the settlement.",
+      "source": { "url": "https://nubela.co/blog/goodbye-proxycurl/", "read_on": "2026-11-23" },
+      "hosts": ["nubela.co", "proxycurl.com"],
+      "requirePath": true,
+      "hostPathHint": "^/proxycurl/",
+      "authHeaders": ["Authorization:\\s*Bearer"],
+      "sdk": ["from\\s+proxycurl", "import\\s+proxycurl", "require\\(['\"]proxycurl", "from\\s+['\"]proxycurl", "import\\s+.*['\"]proxycurl"],
+      "endpoints": [
+        {
+          "id": "person_profile",
+          "name": "Person Profile",
+          "method": "GET",
+          "oldPath": "/proxycurl/api/v2/linkedin",
+          "pathPattern": "^/(proxycurl/)?api/v2/linkedin/?$",
+          "oldPathStatus": "confirmed in the Nubela documentation snippet quoted in the FoxAPIs alternatives page (2026-11-23)",
+          "oldParams": ["url", "fallback_to_cache", "use_cache", "skills", "inferred_salary", "personal_email", "personal_contact_number", "twitter_profile_id", "facebook_profile_id", "github_profile_id", "extra"],
+          "mapping": {
+            "foxapis": { "path": "/v1/enrich_person", "method": "POST" },
+            "async": false,
+            "body": [
+              { "to": "name", "inputs": ["name"], "required": true, "todo": "full name of the person (the old call only had a profile address)" },
+              { "to": "company", "inputs": ["company"], "todo": "current employer, narrows the match (optional)" },
+              { "to": "domain", "inputs": ["domain"], "todo": "employer website domain, narrows the match (optional)" },
+              { "to": "linkedin_url", "inputs": ["url"], "fromOld": ["url"] }
+            ],
+            "paramNotes": [
+              { "old": "url", "new": "linkedin_url", "note": "passed as a hint to narrow the match; it is not looked up on its own" },
+              { "old": "(none)", "new": "name", "note": "required by FoxAPIs; the old call did not have it, so a TODO placeholder is inserted" },
+              { "old": "fallback_to_cache, use_cache, skills, inferred_salary, personal_email, personal_contact_number, twitter_profile_id, facebook_profile_id, github_profile_id, extra", "new": "(dropped)", "note": "no FoxAPIs parameter does the same job" }
+            ],
+            "result": {
+              "kind": "old-shape",
+              "root": "profile",
+              "emptyMeans": "no profile in the response",
+              "fieldMap": [
+                { "old": "full_name", "rule": "copy", "from": "full_name", "basis": "real sample 2026-11-22" },
+                { "old": "first_name", "rule": "derived", "transform": "firstName", "from": "full_name", "basis": "derived: first token, only when the name has exactly two words", "note": "FoxAPIs keeps one name field (alternatives page, 2026-11-22)" },
+                { "old": "last_name", "rule": "derived", "transform": "lastName", "from": "full_name", "basis": "derived: second token, only when the name has exactly two words" },
+                { "old": "public_identifier", "rule": "derived", "transform": "slugFromLinkedin", "from": "linkedin_url", "basis": "derived: last path part of the profile address" },
+                { "old": "profile_pic_url", "rule": "copy", "from": "photo_url", "basis": "real sample 2026-11-22 (field present, empty in the sample)" },
+                { "old": "occupation", "rule": "derived", "transform": "titleAtEmployer", "from": "title", "also": "employer", "basis": "derived: title at employer, only when both are non-empty" },
+                { "old": "headline", "rule": "derived", "transform": "titleAtEmployer", "from": "title", "also": "employer", "basis": "derived: title at employer, only when both are non-empty" },
+                { "old": "summary", "rule": "copy", "from": "summary", "basis": "real sample 2026-11-22 (a one-line text; style differs from the old summary)" },
+                { "old": "experiences", "rule": "passthrough", "from": "employment_history", "basis": "field present in sample (empty list); items are returned as FoxAPIs items, NOT reshaped to the old item layout" },
+                { "old": "education", "rule": "passthrough", "from": "education", "basis": "field present in sample (empty list); items are returned as FoxAPIs items, NOT reshaped to the old item layout" },
+                { "old": "country", "rule": "null", "reason": "FoxAPIs does not return a location", "basis": "alternatives page, 2026-11-22" },
+                { "old": "country_full_name", "rule": "null", "reason": "FoxAPIs does not return a location", "basis": "alternatives page, 2026-11-22" },
+                { "old": "city", "rule": "null", "reason": "FoxAPIs does not return a location", "basis": "alternatives page, 2026-11-22" },
+                { "old": "state", "rule": "null", "reason": "FoxAPIs does not return a location", "basis": "alternatives page, 2026-11-22" },
+                { "old": "follower_count", "rule": "null", "reason": "FoxAPIs does not return follower counts", "basis": "alternatives page, 2026-11-22" },
+                { "old": "connections", "rule": "null", "reason": "no equivalent in FoxAPIs", "basis": "no field in the sample" },
+                { "old": "people_also_viewed", "rule": "null", "reason": "FoxAPIs does not return a similar-people list", "basis": "alternatives page, 2026-11-22" },
+                { "old": "similarly_named_profiles", "rule": "null", "reason": "no equivalent in FoxAPIs (same-name people are listed under a different field inside the FoxAPIs profile)", "basis": "no matching field in the sample" },
+                { "old": "background_cover_image_url", "rule": "null", "reason": "no equivalent in FoxAPIs", "basis": "no field in the sample" },
+                { "old": "languages", "rule": "null", "reason": "no equivalent in FoxAPIs", "basis": "no field in the sample" },
+                { "old": "industry", "rule": "null", "reason": "no equivalent in FoxAPIs", "basis": "no field in the sample" },
+                { "old": "gender", "rule": "null", "reason": "no equivalent in FoxAPIs", "basis": "no field in the sample" },
+                { "old": "birth_date", "rule": "null", "reason": "no equivalent in FoxAPIs", "basis": "no field in the sample" },
+                { "old": "inferred_salary", "rule": "null", "reason": "no equivalent in FoxAPIs", "basis": "no field in the sample" },
+                { "old": "personal_emails", "rule": "null", "reason": "FoxAPIs returns email candidates labelled by source, not personal emails; not mapped", "basis": "alternatives page, 2026-11-22" },
+                { "old": "personal_numbers", "rule": "null", "reason": "FoxAPIs phones are business numbers found with a source address; not mapped", "basis": "sample 2026-11-22" },
+                { "old": "articles", "rule": "null", "reason": "no equivalent in FoxAPIs", "basis": "no field in the sample" },
+                { "old": "groups", "rule": "null", "reason": "no equivalent in FoxAPIs", "basis": "no field in the sample" },
+                { "old": "extra", "rule": "null", "reason": "no equivalent in FoxAPIs", "basis": "no field in the sample" }
+              ],
+              "oursOnly": ["emails", "phones", "github_url", "twitter_url", "twitter_handle", "news_mentions", "identity_verification", "overall_confidence", "deeper_dossier"],
+              "oldShapeNote": "The old field list is the one in the engine's design notes; Nubela's own Person Profile reference is no longer online, so old field names are not re-verified here."
+            }
+          }
+        },
+        {
+          "id": "work_email",
+          "name": "Work Email Lookup",
+          "method": "GET",
+          "oldPath": "/proxycurl/api/linkedin/profile/email",
+          "pathPattern": "^/(proxycurl/)?api/linkedin/profile/email/?$",
+          "oldPathStatus": "from the vendor's public documentation as remembered; the archived copy could not be read, so not re-verified",
+          "oldParams": ["linkedin_profile_url", "callback_url"],
+          "mapping": {
+            "foxapis": { "path": "/v1/find_email", "method": "POST" },
+            "async": false,
+            "body": [
+              { "to": "website", "inputs": ["website"], "required": true, "todo": "company website domain, for example example.com (the old call only had a profile address)" },
+              { "to": "name", "inputs": ["name"], "todo": "full name of the person (improves the match)" }
+            ],
+            "paramNotes": [
+              { "old": "linkedin_profile_url", "new": "(dropped)", "note": "FoxAPIs find_email takes a company website and a name; a profile address cannot be resolved" },
+              { "old": "(none)", "new": "website", "note": "required by FoxAPIs; the old call did not have it, so a TODO placeholder is inserted" },
+              { "old": "callback_url", "new": "(dropped)", "note": "FoxAPIs find_email answers in the same request" }
+            ],
+            "result": {
+              "kind": "raw",
+              "rawNote": "The old response layout is not verified, so the FoxAPIs answer is returned unchanged. A real no-match answer has success, email (null), reason and credits_used. No old-to-new field table is claimed.",
+              "fieldMap": []
+            }
+          }
+        },
+        {
+          "id": "person_lookup",
+          "name": "Person Lookup",
+          "method": "GET",
+          "oldPath": "/proxycurl/api/linkedin/profile/resolve",
+          "pathPattern": "^/(proxycurl/)?api/linkedin/profile/resolve/?$",
+          "oldPathStatus": "from the vendor's public documentation as remembered; not re-verified",
+          "oldParams": ["first_name", "last_name", "company_domain", "location", "title"],
+          "mapping": {
+            "foxapis": { "path": "/v1/enrich_person", "method": "POST" },
+            "async": false,
+            "body": [
+              { "to": "name", "inputs": ["name"], "required": true, "todo": "full name: first_name and last_name joined with a space" },
+              { "to": "domain", "inputs": ["company_domain"], "fromOld": ["company_domain"] },
+              { "to": "title", "inputs": ["title"], "fromOld": ["title"] }
+            ],
+            "paramNotes": [
+              { "old": "first_name, last_name", "new": "name", "note": "joined with a space" },
+              { "old": "company_domain", "new": "domain", "note": "copied" },
+              { "old": "title", "new": "title", "note": "copied" },
+              { "old": "location", "new": "(dropped)", "note": "FoxAPIs enrich_person has no location parameter" }
+            ],
+            "result": {
+              "kind": "raw",
+              "rawNote": "The old response layout is not verified, so the FoxAPIs answer is returned unchanged. The profile address is in profile.linkedin_url when found. FoxAPIs returns a confidence for the match, not the old similarity scores.",
+              "fieldMap": []
+            }
+          }
+        },
+        { "id": "company_profile", "name": "Company Profile", "method": "GET", "oldPath": "/proxycurl/api/linkedin/company", "pathPattern": "^/(proxycurl/)?api/linkedin/company/?$", "oldPathStatus": "as remembered; not re-verified", "oldParams": ["url"], "mapping": null, "noEquivalentReason": "The closest FoxAPIs call (get_company_snapshot) returns a written due-diligence snapshot, not company fields such as size, industry or location. Nothing in it fills the old fields, so no mapping is offered." },
+        { "id": "profile_picture", "name": "Person Profile Picture", "method": "GET", "oldPath": "/proxycurl/api/linkedin/person/profile-picture", "pathPattern": "^/(proxycurl/)?api/linkedin/person/profile-picture/?$", "mapping": null, "noEquivalentReason": "FoxAPIs has no lookup of a picture by profile address. enrich_person returns a photo field, but it is often empty and needs a name." },
+        { "id": "reverse_work_email", "name": "Reverse Email Lookup", "method": "GET", "oldPath": "/proxycurl/api/linkedin/profile/resolve/email", "pathPattern": "^/(proxycurl/)?api/linkedin/profile/resolve/email/?$", "mapping": null, "noEquivalentReason": "FoxAPIs enrich_person needs a name; it does not look people up by email address." },
+        { "id": "personal_contact", "name": "Personal Contact Number", "method": "GET", "oldPath": "/proxycurl/api/contact-api/personal-contact", "pathPattern": "^/(proxycurl/)?api/contact-api/personal-contact/?$", "mapping": null, "noEquivalentReason": "FoxAPIs phone numbers are business numbers found with a source address, not personal numbers. Not mapped." },
+        { "id": "personal_email", "name": "Personal Email", "method": "GET", "oldPath": "/proxycurl/api/contact-api/personal-email", "pathPattern": "^/(proxycurl/)?api/contact-api/personal-email/?$", "mapping": null, "noEquivalentReason": "FoxAPIs returns email candidates labelled by how they were found, not personal emails. Not mapped." },
+        { "id": "disposable_email", "name": "Disposable Email Check", "method": "GET", "oldPath": "/proxycurl/api/disposable-email", "pathPattern": "^/(proxycurl/)?api/disposable-email/?$", "mapping": null, "noEquivalentReason": "No disposable-address check exists in the FoxAPIs catalog." },
+        { "id": "employee_listing", "name": "Employee Listing", "method": "GET", "oldPath": "/proxycurl/api/linkedin/company/employees/", "pathPattern": "^/(proxycurl/)?api/linkedin/company/employees/?$", "mapping": null, "noEquivalentReason": "No employee listing exists in the FoxAPIs catalog." },
+        { "id": "employee_count", "name": "Employee Count", "method": "GET", "oldPath": "/proxycurl/api/linkedin/company/employees/count", "pathPattern": "^/(proxycurl/)?api/linkedin/company/employees/count/?$", "mapping": null, "noEquivalentReason": "No employee count exists in the FoxAPIs catalog." },
+        { "id": "role_lookup", "name": "Role Lookup", "method": "GET", "oldPath": "/proxycurl/api/find/company/role/", "pathPattern": "^/(proxycurl/)?api/find/company/role/?$", "mapping": null, "noEquivalentReason": "No role lookup exists in the FoxAPIs catalog." },
+        { "id": "company_lookup", "name": "Company Lookup", "method": "GET", "oldPath": "/proxycurl/api/linkedin/company/resolve", "pathPattern": "^/(proxycurl/)?api/linkedin/company/resolve/?$", "mapping": null, "noEquivalentReason": "No company lookup by name exists in the FoxAPIs catalog." },
+        { "id": "job_profile", "name": "Job Profile", "method": "GET", "oldPath": "/proxycurl/api/linkedin/job", "pathPattern": "^/(proxycurl/)?api/linkedin/job/?$", "mapping": null, "noEquivalentReason": "FoxAPIs job calls read Indeed, Monster and ZipRecruiter posts by address. That is a different call, so it is not mapped." },
+        { "id": "school_profile", "name": "School Profile", "method": "GET", "oldPath": "/proxycurl/api/linkedin/school", "pathPattern": "^/(proxycurl/)?api/linkedin/school/?$", "mapping": null, "noEquivalentReason": "No school profile exists in the FoxAPIs catalog." },
+        { "id": "student_listing", "name": "Student Listing", "method": "GET", "oldPath": "/proxycurl/api/linkedin/school/students/", "pathPattern": "^/(proxycurl/)?api/linkedin/school/students/?$", "mapping": null, "noEquivalentReason": "No student listing exists in the FoxAPIs catalog." },
+        { "id": "credit_balance", "name": "Credit Balance", "method": "GET", "oldPath": "/proxycurl/api/credit-balance", "pathPattern": "^/(proxycurl/)?api/credit-balance/?$", "mapping": null, "noEquivalentReason": "The old balance call has no use now. FoxAPIs has its own account call for its own credits." }
+      ]
+    },
+    {
+      "id": "clearbit-logo",
+      "name": "Clearbit Logo API",
+      "status": "ended",
+      "date": "2025-12-08",
+      "summary": "The vendor's release notes say the public Logo API address is no longer available after 8 December 2025.",
+      "source": { "url": "https://clearbit.com/changelog/2025-10-22", "read_on": "2026-11-23" },
+      "hosts": ["logo.clearbit.com"],
+      "requirePath": false,
+      "endpoints": [
+        { "id": "logo", "name": "Logo", "method": "GET", "oldPath": "/<domain>", "pathPattern": "^/.*$", "mapping": null, "noEquivalentReason": "There is no logo endpoint in the FoxAPIs catalog. Use the logo source of your choice, or show the company name as text." }
+      ]
+    },
+    {
+      "id": "clearbit-enrichment",
+      "name": "Clearbit Enrichment",
+      "status": "moved",
+      "date": null,
+      "summary": "Clearbit's home page says it has joined HubSpot, and its blog describes the replacement as enrichment inside HubSpot. No end date was published for the standalone enrichment API, so it is shown as moved, not as shut down.",
+      "source": { "url": "https://clearbit.com/", "read_on": "2026-11-22", "via": "FoxAPIs alternatives page for Clearbit, read 2026-11-22" },
+      "hosts": ["company.clearbit.com", "person.clearbit.com"],
+      "requirePath": false,
+      "authHeaders": ["Authorization:\\s*Bearer"],
+      "sdk": ["from\\s+clearbit", "import\\s+clearbit", "require\\(['\"]clearbit['\"]\\)", "from\\s+['\"]clearbit['\"]"],
+      "endpoints": [
+        {
+          "id": "company_find",
+          "name": "Company enrichment (by domain)",
+          "method": "GET",
+          "oldPath": "/v2/companies/find",
+          "pathPattern": "^/v2/companies/find/?$",
+          "oldParams": ["domain"],
+          "mapping": {
+            "foxapis": { "path": "/v1/get_company_snapshot", "method": "POST" },
+            "async": true,
+            "body": [
+              { "to": "domain", "inputs": ["domain"], "fromOld": ["domain"], "required": true, "todo": "company website domain" }
+            ],
+            "paramNotes": [
+              { "old": "domain", "new": "domain", "note": "copied" }
+            ],
+            "result": {
+              "kind": "snapshot",
+              "rawNote": "PARTIAL. get_company_snapshot answers with a written due-diligence snapshot (async: 202, then poll), not company fields. The generated code returns that snapshot unchanged. Almost no old field can be filled; the table says which.",
+              "root": "result",
+              "fieldMap": [
+                { "old": "name", "rule": "null", "reason": "not claimed: a similar field (subject_name) appears in a FoxAPIs company report sample, but no snapshot sample was captured to confirm it", "basis": "company report sample 2026-11-23" },
+                { "old": "domain", "rule": "null", "reason": "FoxAPIs does not return a domain field; use the one you sent", "basis": "no field in the sample" },
+                { "old": "legalName", "rule": "null", "reason": "no equivalent field", "basis": "no field in the sample" },
+                { "old": "description", "rule": "null", "reason": "the snapshot has written sections, not one description field", "basis": "sample 2026-11-23" },
+                { "old": "foundedYear", "rule": "null", "reason": "no equivalent field", "basis": "no field in the sample" },
+                { "old": "category (sector, industry)", "rule": "null", "reason": "no equivalent field", "basis": "no field in the sample" },
+                { "old": "metrics (employees, raised, revenue)", "rule": "null", "reason": "no equivalent field; figures appear only inside written sections", "basis": "sample 2026-11-23" },
+                { "old": "location, geo", "rule": "null", "reason": "no equivalent field", "basis": "no field in the sample" },
+                { "old": "logo", "rule": "null", "reason": "no equivalent field", "basis": "no field in the sample" },
+                { "old": "linkedin, twitter, facebook, crunchbase handles", "rule": "null", "reason": "no equivalent field on the company call", "basis": "no field in the sample" },
+                { "old": "tech, tags", "rule": "null", "reason": "no equivalent field", "basis": "no field in the sample" }
+              ],
+              "oldShapeNote": "Clearbit's field reference could not be read (FoxAPIs alternatives page, 2026-11-22), so the old field names above are as remembered and not verified."
+            }
+          }
+        },
+        {
+          "id": "person_find",
+          "name": "Person enrichment (by email)",
+          "method": "GET",
+          "oldPath": "/v2/people/find",
+          "pathPattern": "^/v2/(people/find|combined/find)/?$",
+          "oldParams": ["email"],
+          "mapping": {
+            "foxapis": { "path": "/v1/enrich_person", "method": "POST" },
+            "async": false,
+            "body": [
+              { "to": "name", "inputs": ["name"], "required": true, "todo": "full name of the person (the old call only had an email address)" },
+              { "to": "company", "inputs": ["company"], "todo": "employer, narrows the match (optional)" },
+              { "to": "domain", "inputs": ["domain"], "todo": "employer website domain, narrows the match (optional)" }
+            ],
+            "paramNotes": [
+              { "old": "email", "new": "(dropped)", "note": "FoxAPIs enrich_person does not look people up by email. NOT a drop-in: you must supply a name." }
+            ],
+            "result": {
+              "kind": "raw",
+              "rawNote": "Clearbit's field reference could not be read, so no field table is claimed. The FoxAPIs answer is returned unchanged.",
+              "fieldMap": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "bing-search",
+      "name": "Bing Search APIs",
+      "status": "ended",
+      "date": "2025-08-11",
+      "summary": "Microsoft's lifecycle notice lists the Bing Search and Custom Search APIs as retired on 11 August 2025.",
+      "source": { "url": "https://learn.microsoft.com/en-us/lifecycle/announcements/bing-search-api-retirement", "read_on": "2026-11-23" },
+      "hosts": ["api.bing.microsoft.com", "api.cognitive.microsoft.com"],
+      "requirePath": true,
+      "authHeaders": ["Ocp-Apim-Subscription-Key"],
+      "endpoints": [
+        { "id": "search", "name": "Web Search", "method": "GET", "oldPath": "/v7.0/search", "pathPattern": "^/(bing/)?v7\\.0/(custom/)?(search|images/search|news/search|videos/search|entities|spellcheck|suggestions)/?$", "mapping": null, "noEquivalentReason": "There is no web search endpoint in the FoxAPIs catalog. Follow Microsoft's own notice for what replaces it." }
+      ]
+    },
+    {
+      "id": "instagram-basic-display",
+      "name": "Instagram Basic Display API",
+      "status": "ended",
+      "date": "2024-12-04",
+      "summary": "Meta's developer notice says the Basic Display API ends on 4 December 2024. The same hosts are also used by Meta's current Instagram APIs, so check which one your code uses.",
+      "source": { "url": "https://developers.facebook.com/blog/post/2024/09/04/update-on-instagram-basic-display-api", "read_on": "2026-11-23" },
+      "hosts": ["graph.instagram.com", "api.instagram.com"],
+      "requirePath": true,
+      "ambiguous": true,
+      "endpoints": [
+        { "id": "user_media", "name": "User media list", "method": "GET", "oldPath": "/me/media", "pathPattern": "^/(me/media|me|[0-9]+/children|refresh_access_token)/?$", "mapping": null, "noEquivalentReason": "FoxAPIs reads one public post by its address (POST /v1/social/instagram/post). It does not list a user's own media, so nothing is mapped." }
+      ]
+    },
+    {
+      "id": "reversecontact-legacy",
+      "name": "Reverse Contact legacy person routes",
+      "status": "ended",
+      "date": "2026-10-13",
+      "summary": "The vendor's platform update page says the legacy person routes return 410 Gone from 13 October 2026.",
+      "source": { "url": "https://docs.reversecontact.com/guides/july-2026-platform-update", "read_on": "2026-11-23" },
+      "hosts": ["reversecontact.com"],
+      "requirePath": true,
+      "endpoints": [
+        { "id": "resolve_email", "name": "Resolve person by email", "method": "GET", "oldPath": "/v2/resolve/persons/email", "pathPattern": "^/v2/(resolve/persons/(email|name)|search/persons)/?$", "mapping": null, "noEquivalentReason": "FoxAPIs enrich_person needs a name and does not look people up by email. The old response layout was not verified, so no mapping is offered yet." }
+      ]
+    },
+    {
+      "id": "reversecontact-activities",
+      "name": "Reverse Contact Activities",
+      "status": "ended",
+      "date": "2026-07-01",
+      "summary": "The vendor's platform update page says posts, comments and reactions were discontinued on 1 July 2026.",
+      "source": { "url": "https://docs.reversecontact.com/guides/july-2026-platform-update", "read_on": "2026-11-23" },
+      "hosts": ["reversecontact.com"],
+      "requirePath": true,
+      "endpoints": [
+        { "id": "activities", "name": "Activities", "method": "GET", "oldPath": "/v2/activities", "pathPattern": "^/v2/(activities|posts|comments|reactions)(/.*)?$", "mapping": null, "noEquivalentReason": "No equivalent exists in the FoxAPIs catalog." }
+      ]
+    },
+    {
+      "id": "dataforseo-pinterest",
+      "name": "DataForSEO Pinterest and Social Media APIs",
+      "status": "ended",
+      "date": "2026-09-16",
+      "summary": "DataForSEO's update notice says support for its Pinterest and Social Media APIs ended on 16 September 2026.",
+      "source": { "url": "https://dataforseo.com/update/ending-support-pinterest-and-social-media-ap%D1%96", "read_on": "2026-11-23", "note": "the real address ends with a Cyrillic i; copy it from the vendor's update list" },
+      "hosts": ["api.dataforseo.com"],
+      "requirePath": true,
+      "endpoints": [
+        { "id": "pinterest", "name": "Pinterest and Social Media", "method": "POST", "oldPath": "/v3/business_data/social_media/pinterest/live", "pathPattern": "^/v3/(business_data/social_media|social_media)/(pinterest|facebook|reddit)(/.*)?$", "mapping": null, "noEquivalentReason": "FoxAPIs reads a single Pinterest pin by its address (POST /v1/visual/pinterest/pin). That is not the same call as the old keyword and listing calls, so nothing is mapped." }
+      ]
+    },
+    {
+      "id": "lusha-person-v2",
+      "name": "Lusha Person API v2",
+      "status": "scheduled",
+      "date": "2026-11-30",
+      "summary": "The vendor's guide says the v2 person call carries a Sunset header since 18 May 2026 and is retired after a six-month overlap. It is still live today.",
+      "source": { "url": "https://docs.lusha.com/tutorials/person-api-v1-deprecation", "read_on": "2026-11-23" },
+      "hosts": ["api.lusha.com"],
+      "requirePath": true,
+      "authHeaders": ["api_key\\s*:"],
+      "endpoints": [
+        {
+          "id": "person_v2",
+          "name": "Person enrichment v2",
+          "method": "GET",
+          "oldPath": "/v2/person",
+          "pathPattern": "^/v2/person/?$",
+          "oldParams": ["firstName", "lastName", "company", "property", "email"],
+          "mapping": {
+            "foxapis": { "path": "/v1/enrich_person", "method": "POST" },
+            "async": false,
+            "body": [
+              { "to": "name", "inputs": ["name"], "required": true, "todo": "full name: firstName and lastName joined with a space" },
+              { "to": "company", "inputs": ["company"], "fromOld": ["company"] }
+            ],
+            "paramNotes": [
+              { "old": "firstName, lastName", "new": "name", "note": "joined with a space" },
+              { "old": "company", "new": "company", "note": "copied" },
+              { "old": "email, property", "new": "(dropped)", "note": "no FoxAPIs parameter does the same job" }
+            ],
+            "result": {
+              "kind": "raw",
+              "rawNote": "The old response layout was not verified, so the FoxAPIs answer is returned unchanged and no field table is claimed.",
+              "fieldMap": []
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

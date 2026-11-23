@@ -1,0 +1,143 @@
+{
+  "input": "input.py",
+  "language": "py",
+  "matches": [
+    {
+      "api": "Proxycurl",
+      "endpoint": "Person Profile",
+      "line": 5,
+      "status": "shut down on 2025-07-04",
+      "source": "https://nubela.co/blog/goodbye-proxycurl/",
+      "mapped": true,
+      "evidence": [
+        "host nubela.co",
+        "path /proxycurl/api/v2/linkedin"
+      ]
+    }
+  ],
+  "changes": [
+    "Proxycurl Person Profile: url -> linkedin_url (passed as a hint to narrow the match; it is not looked up on its own)",
+    "Proxycurl Person Profile: (none) -> name (required by FoxAPIs; the old call did not have it, so a TODO placeholder is inserted)",
+    "Proxycurl Person Profile: fallback_to_cache, use_cache, skills, inferred_salary, personal_email, personal_contact_number, twitter_profile_id, facebook_profile_id, github_profile_id, extra -> (dropped) (no FoxAPIs parameter does the same job)"
+  ],
+  "unfilled": [
+    {
+      "field": "country",
+      "reason": "FoxAPIs does not return a location",
+      "api": "proxycurl",
+      "endpoint": "person_profile"
+    },
+    {
+      "field": "country_full_name",
+      "reason": "FoxAPIs does not return a location",
+      "api": "proxycurl",
+      "endpoint": "person_profile"
+    },
+    {
+      "field": "city",
+      "reason": "FoxAPIs does not return a location",
+      "api": "proxycurl",
+      "endpoint": "person_profile"
+    },
+    {
+      "field": "state",
+      "reason": "FoxAPIs does not return a location",
+      "api": "proxycurl",
+      "endpoint": "person_profile"
+    },
+    {
+      "field": "follower_count",
+      "reason": "FoxAPIs does not return follower counts",
+      "api": "proxycurl",
+      "endpoint": "person_profile"
+    },
+    {
+      "field": "connections",
+      "reason": "no equivalent in FoxAPIs",
+      "api": "proxycurl",
+      "endpoint": "person_profile"
+    },
+    {
+      "field": "people_also_viewed",
+      "reason": "FoxAPIs does not return a similar-people list",
+      "api": "proxycurl",
+      "endpoint": "person_profile"
+    },
+    {
+      "field": "similarly_named_profiles",
+      "reason": "no equivalent in FoxAPIs (same-name people are listed under a different field inside the FoxAPIs profile)",
+      "api": "proxycurl",
+      "endpoint": "person_profile"
+    },
+    {
+      "field": "background_cover_image_url",
+      "reason": "no equivalent in FoxAPIs",
+      "api": "proxycurl",
+      "endpoint": "person_profile"
+    },
+    {
+      "field": "languages",
+      "reason": "no equivalent in FoxAPIs",
+      "api": "proxycurl",
+      "endpoint": "person_profile"
+    },
+    {
+      "field": "industry",
+      "reason": "no equivalent in FoxAPIs",
+      "api": "proxycurl",
+      "endpoint": "person_profile"
+    },
+    {
+      "field": "gender",
+      "reason": "no equivalent in FoxAPIs",
+      "api": "proxycurl",
+      "endpoint": "person_profile"
+    },
+    {
+      "field": "birth_date",
+      "reason": "no equivalent in FoxAPIs",
+      "api": "proxycurl",
+      "endpoint": "person_profile"
+    },
+    {
+      "field": "inferred_salary",
+      "reason": "no equivalent in FoxAPIs",
+      "api": "proxycurl",
+      "endpoint": "person_profile"
+    },
+    {
+      "field": "personal_emails",
+      "reason": "FoxAPIs returns email candidates labelled by source, not personal emails; not mapped",
+      "api": "proxycurl",
+      "endpoint": "person_profile"
+    },
+    {
+      "field": "personal_numbers",
+      "reason": "FoxAPIs phones are business numbers found with a source address; not mapped",
+      "api": "proxycurl",
+      "endpoint": "person_profile"
+    },
+    {
+      "field": "articles",
+      "reason": "no equivalent in FoxAPIs",
+      "api": "proxycurl",
+      "endpoint": "person_profile"
+    },
+    {
+      "field": "groups",
+      "reason": "no equivalent in FoxAPIs",
+      "api": "proxycurl",
+      "endpoint": "person_profile"
+    },
+    {
+      "field": "extra",
+      "reason": "no equivalent in FoxAPIs",
+      "api": "proxycurl",
+      "endpoint": "person_profile"
+    }
+  ],
+  "unmapped": [],
+  "notes": [
+    "Proxycurl Person Profile: FoxAPIs needs name; the old call did not have it, so a TODO placeholder was inserted. full name of the person (the old call only had a profile address)."
+  ]
+}

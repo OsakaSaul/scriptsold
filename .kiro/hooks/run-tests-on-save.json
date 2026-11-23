@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Run tests when source or tests are saved",
+      "description": "Runs the unit and property tests after a JavaScript or TypeScript file under src, functions, scripts or tests is saved.",
+      "trigger": "PostFileSave",
+      "matcher": "(src|functions|scripts|tests)[\\/].*\\.(js|mjs|ts)$",
+      "action": {
+        "type": "command",
+        "command": "npm test --silent"
+      },
+      "timeout": 120
+    }
+  ]
+}

@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+<title>Resurrect: worked examples</title>
+<meta name="description" content="Three worked examples: input, generated JavaScript and Python, and the field-mapping table.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top"><h1>Worked examples</h1><p class="lead">Each example is pre-rendered by the same engine that runs on the front page. <a href="index.html">Back to the paste box</a>.</p></header>
+<main>
+<section aria-labelledby="h-01-proxycurl-person-profile"><h2 id="h-01-proxycurl-person-profile">Proxycurl person profile (Python)</h2><p>A script that loads a person profile from a profile address. The service is gone. The engine finds the call, replaces it with a FoxAPIs person-enrichment call that returns the old field names, and says which fields it cannot fill.</p>
+<h3>Input: <code>input.py</code></h3><pre><code>import os
+import requests
+
+api_key = os.environ[&quot;PROXYCURL_API_KEY&quot;]
+api_endpoint = &quot;https://nubela.co/proxycurl/api/v2/linkedin&quot;
+headers = {&quot;Authorization&quot;: &quot;Bearer &quot; + api_key}
+
+def load_profile(profile_url):
+    response = requests.get(
+        api_endpoint,
+        params={&quot;url&quot;: profile_url, &quot;use_cache&quot;: &quot;if-present&quot;},
+        headers=headers,
+    )
+    return response.json()
+
+if __name__ == &quot;__main__&quot;:
+    person = load_profile(&quot;https://www.linkedin.com/in/satyanadella/&quot;)
+    print(person[&quot;full_name&quot;], &quot;-&quot;, person[&quot;headline&quot;])
+</code></pre>
+<h3>Generated JavaScript</h3><pre><code>import { pathToFileURL } from &quot;node:url&quot;;
+
+// RESURRECT: replaces the Proxycurl &quot;Person Profile&quot; call (ended 2025-07-04). It now calls FoxAPIs POST /v1/enrich_person.
+// Needs FOXAPIS_KEY in the environment. A free key: https://foxapis.com/trial
+// Fields FoxAPIs cannot fill come back as null; the reasons are in _resurrect.unfilled.
+const blank = (v) =&gt; (v === undefined || v === null || v === &quot;&quot; ? null : v);
+const TRANSFORMS = {
+  firstName: (p) =&gt; { const t = String(p.full_name || &quot;&quot;).trim().split(/\s+/); return t.length === 2 ? t[0] : null; },
+  lastName: (p) =&gt; { const t = String(p.full_name || &quot;&quot;).trim().split(/\s+/); return t.length === 2 ? t[1] : null; },
+  slugFromLinkedin: (p) =&gt; { const m = /linkedin\.com\/in\/([^\/?#]+)/.exec(p.linkedin_url || &quot;&quot;); return m ? m[1] : null; },
+  titleAtEmployer: (p) =&gt; (p.title &amp;&amp; p.employer ? `${p.title} at ${p.employer}` : null),
+};
+const RULES = [
+  {&quot;old&quot;:&quot;full_name&quot;,&quot;rule&quot;:&quot;copy&quot;,&quot;from&quot;:&quot;full_name&quot;},
+  {&quot;old&quot;:&quot;first_name&quot;,&quot;rule&quot;:&quot;derived&quot;,&quot;from&quot;:&quot;full_name&quot;,&quot;transform&quot;:&quot;firstName&quot;},
+  {&quot;old&quot;:&quot;last_name&quot;,&quot;rule&quot;:&quot;derived&quot;,&quot;from&quot;:&quot;full_name&quot;,&quot;transform&quot;:&quot;lastName&quot;},
+  {&quot;old&quot;:&quot;public_identifier&quot;,&quot;rule&quot;:&quot;derived&quot;,&quot;from&quot;:&quot;linkedin_url&quot;,&quot;transform&quot;:&quot;slugFromLinkedin&quot;},
+  {&quot;old&quot;:&quot;profile_pic_url&quot;,&quot;rule&quot;:&quot;copy&quot;,&quot;from&quot;:&quot;photo_url&quot;},
+  {&quot;old&quot;:&quot;occupation&quot;,&quot;rule&quot;:&quot;derived&quot;,&quot;from&quot;:&quot;title&quot;,&quot;transform&quot;:&quot;titleAtEmployer&quot;},
+  {&quot;old&quot;:&quot;headline&quot;,&quot;rule&quot;:&quot;derived&quot;,&quot;from&quot;:&quot;title&quot;,&quot;transform&quot;:&quot;titleAtEmployer&quot;},
+  {&quot;old&quot;:&quot;summary&quot;,&quot;rule&quot;:&quot;copy&quot;,&quot;from&quot;:&quot;summary&quot;},
+  {&quot;old&quot;:&quot;experiences&quot;,&quot;rule&quot;:&quot;passthrough&quot;,&quot;from&quot;:&quot;employment_history&quot;},
+  {&quot;old&quot;:&quot;education&quot;,&quot;rule&quot;:&quot;passthrough&quot;,&quot;from&quot;:&quot;education&quot;},
+  {&quot;old&quot;:&quot;country&quot;,&quot;rule&quot;:&quot;null&quot;,&quot;reason&quot;:&quot;FoxAPIs does not return a location&quot;},
+  {&quot;old&quot;:&quot;country_full_name&quot;,&quot;rule&quot;:&quot;null&quot;,&quot;reason&quot;:&quot;FoxAPIs does not return a location&quot;},
+  {&quot;old&quot;:&quot;city&quot;,&quot;rule&quot;:&quot;null&quot;,&quot;reason&quot;:&quot;FoxAPIs does not return a location&quot;},
+  {&quot;old&quot;:&quot;state&quot;,&quot;rule&quot;:&quot;null&quot;,&quot;reason&quot;:&quot;FoxAPIs does not return a location&quot;},
+  {&quot;old&quot;:&quot;follower_count&quot;,&quot;rule&quot;:&quot;null&quot;,&quot;reason&quot;:&quot;FoxAPIs does not return follower counts&quot;},
+  {&quot;old&quot;:&quot;connections&quot;,&quot;rule&quot;:&quot;null&quot;,&quot;reason&quot;:&quot;no equivalent in FoxAPIs&quot;},
+  {&quot;old&quot;:&quot;people_also_viewed&quot;,&quot;rule&quot;:&quot;null&quot;,&quot;reason&quot;:&quot;FoxAPIs does not return a similar-people list&quot;},
+  {&quot;old&quot;:&quot;similarly_named_profiles&quot;,&quot;rule&quot;:&quot;null&quot;,&quot;reason&quot;:&quot;no equivalent in FoxAPIs (same-name people are listed under a different field inside the FoxAPIs profile)&quot;},
+  {&quot;old&quot;:&quot;background_cover_image_url&quot;,&quot;rule&quot;:&quot;null&quot;,&quot;reason&quot;:&quot;no equivalent in FoxAPIs&quot;},
+  {&quot;old&quot;:&quot;languages&quot;,&quot;rule&quot;:&quot;null&quot;,&quot;reason&quot;:&quot;no equivalent in FoxAPIs&quot;},
+  {&quot;old&quot;:&quot;industry&quot;,&quot;rule&quot;:&quot;null&quot;,&quot;reason&quot;:&quot;no equivalent in FoxAPIs&quot;},
+  {&quot;old&quot;:&quot;gender&quot;,&quot;rule&quot;:&quot;null&quot;,&quot;reason&quot;:&quot;no equivalent in FoxAPIs&quot;},
+  {&quot;old&quot;:&quot;birth_date&quot;,&quot;rule&quot;:&quot;null&quot;,&quot;reason&quot;:&quot;no equivalent in FoxAPIs&quot;},
+  {&quot;old&quot;:&quot;inferred_salary&quot;,&quot;rule&quot;:&quot;null&quot;,&quot;reason&quot;:&quot;no equivalent in FoxAPIs&quot;},
+  {&quot;old&quot;:&quot;personal_emails&quot;,&quot;rule&quot;:&quot;null&quot;,&quot;reason&quot;:&quot;FoxAPIs returns email candidates labelled by source, not personal emails; not mapped&quot;},
+  {&quot;old&quot;:&quot;personal_numbers&quot;,&quot;rule&quot;:&quot;null&quot;,&quot;reason&quot;:&quot;FoxAPIs phones are business numbers found with a source address; not mapped&quot;},
+  {&quot;old&quot;:&quot;articles&quot;,&quot;rule&quot;:&quot;null&quot;,&quot;reason&quot;:&quot;no equivalent in FoxAPIs&quot;},
+  {&quot;old&quot;:&quot;groups&quot;,&quot;rule&quot;:&quot;null&quot;,&quot;reason&quot;:&quot;no equivalent in FoxAPIs&quot;},
+  {&quot;old&quot;:&quot;extra&quot;,&quot;rule&quot;:&quot;null&quot;,&quot;reason&quot;:&quot;no equivalent in FoxAPIs&quot;},
+];
+function toOldShape(p) {
+  const out = {};
+  const derived = [];
+  const unfilled = [];
+  for (const r of RULES) {
+    if (r.rule === &quot;null&quot;) { out[r.old] = null; unfilled.push({ field: r.old, reason: r.reason }); continue; }
+    if (r.rule === &quot;passthrough&quot;) { out[r.old] = Array.isArray(p[r.from]) ? p[r.from] : null; if (out[r.old] === null) unfilled.push({ field: r.old, reason: &quot;FoxAPIs returned no list&quot; }); continue; }
+    const v = r.rule === &quot;derived&quot; ? TRANSFORMS[r.transform](p) : blank(p[r.from]);
+    out[r.old] = v;
+    if (v === null) unfilled.push({ field: r.old, reason: r.rule === &quot;derived&quot; ? &quot;FoxAPIs returned no value to build it from&quot; : &quot;FoxAPIs returned an empty value&quot; });
+    else if (r.rule === &quot;derived&quot;) derived.push(r.old);
+  }
+  out._resurrect = { source: &quot;foxapis&quot;, unfilled, derived };
+  return out;
+}
+const asResponse = (data, status = 200) =&gt; ({ ok: status &lt; 400, status, data, json: async () =&gt; data, text: async () =&gt; JSON.stringify(data) });
+export async function resurrectedPersonProfile({ name, company, domain, url } = {}) {
+  if (!name) throw new Error(&quot;name is required by FoxAPIs: full name of the person (the old call only had a profile address)&quot;);
+  const key = process.env.FOXAPIS_KEY;
+  if (!key) throw new Error(&quot;Set FOXAPIS_KEY (free key: https://foxapis.com/trial)&quot;);
+  const headers = { Authorization: `Bearer ${key}`, &quot;Content-Type&quot;: &quot;application/json&quot; };
+  const body = {};
+  if (name) body.name = name;
+  if (company) body.company = company;
+  if (domain) body.domain = domain;
+  if (url) body.linkedin_url = url;
+  const res = await fetch(&quot;https://api.foxapis.com/v1/enrich_person&quot;, { method: &quot;POST&quot;, headers, body: JSON.stringify(body) });
+  if (res.status === 401 || res.status === 403) throw new Error(&quot;FoxAPIs rejected the key (status &quot; + res.status + &quot;)&quot;);
+  if (!res.ok) throw new Error(&quot;FoxAPIs answered &quot; + res.status);
+  const data = await res.json();
+  const p = data &amp;&amp; data.profile;
+  if (!p || typeof p !== &quot;object&quot;) return null;
+  return toOldShape(p);
+}
+
+if (process.argv[1] &amp;&amp; import.meta.url === pathToFileURL(process.argv[1]).href) {
+  const arg = process.argv[2] ? JSON.parse(process.argv[2]) : {};
+  console.log(JSON.stringify(await resurrectedPersonProfile(arg), null, 2));
+}
+</code></pre>
+<h3>Generated Python</h3><pre><code>import json
+import os
+import re
+import time
+import urllib.error
+import urllib.request
+
+# RESURRECT: replaces the Proxycurl &quot;Person Profile&quot; call (ended 2025-07-04). It now calls FoxAPIs POST /v1/enrich_person.
+# Needs FOXAPIS_KEY in the environment. A free key: https://foxapis.com/trial
+# Fields FoxAPIs cannot fill come back as None; the reasons are in _resurrect[&quot;unfilled&quot;].
+
+TRANSFORMS = {
+    &quot;firstName&quot;: lambda p: (str(p.get(&quot;full_name&quot;) or &quot;&quot;).split()[0] if len(str(p.get(&quot;full_name&quot;) or &quot;&quot;).split()) == 2 else None),
+    &quot;lastName&quot;: lambda p: (str(p.get(&quot;full_name&quot;) or &quot;&quot;).split()[1] if len(str(p.get(&quot;full_name&quot;) or &quot;&quot;).split()) == 2 else None),
+    &quot;slugFromLinkedin&quot;: lambda p: (lambda m: m.group(1) if m else None)(re.search(r&quot;linkedin\.com/in/([^/?#]+)&quot;, p.get(&quot;linkedin_url&quot;) or &quot;&quot;)),
+    &quot;titleAtEmployer&quot;: lambda p: (f&quot;{p['title']} at {p['employer']}&quot; if p.get(&quot;title&quot;) and p.get(&quot;employer&quot;) else None),
+}
+RULES = [
+    {&quot;old&quot;: &quot;full_name&quot;, &quot;rule&quot;: &quot;copy&quot;, &quot;from&quot;: &quot;full_name&quot;},
+    {&quot;old&quot;: &quot;first_name&quot;, &quot;rule&quot;: &quot;derived&quot;, &quot;from&quot;: &quot;full_name&quot;, &quot;transform&quot;: &quot;firstName&quot;},
+    {&quot;old&quot;: &quot;last_name&quot;, &quot;rule&quot;: &quot;derived&quot;, &quot;from&quot;: &quot;full_name&quot;, &quot;transform&quot;: &quot;lastName&quot;},
+    {&quot;old&quot;: &quot;public_identifier&quot;, &quot;rule&quot;: &quot;derived&quot;, &quot;from&quot;: &quot;linkedin_url&quot;, &quot;transform&quot;: &quot;slugFromLinkedin&quot;},
+    {&quot;old&quot;: &quot;profile_pic_url&quot;, &quot;rule&quot;: &quot;copy&quot;, &quot;from&quot;: &quot;photo_url&quot;},
+    {&quot;old&quot;: &quot;occupation&quot;, &quot;rule&quot;: &quot;derived&quot;, &quot;from&quot;: &quot;title&quot;, &quot;transform&quot;: &quot;titleAtEmployer&quot;},
+    {&quot;old&quot;: &quot;headline&quot;, &quot;rule&quot;: &quot;derived&quot;, &quot;from&quot;: &quot;title&quot;, &quot;transform&quot;: &quot;titleAtEmployer&quot;},
+    {&quot;old&quot;: &quot;summary&quot;, &quot;rule&quot;: &quot;copy&quot;, &quot;from&quot;: &quot;summary&quot;},
+    {&quot;old&quot;: &quot;experiences&quot;, &quot;rule&quot;: &quot;passthrough&quot;, &quot;from&quot;: &quot;employment_history&quot;},
+    {&quot;old&quot;: &quot;education&quot;, &quot;rule&quot;: &quot;passthrough&quot;, &quot;from&quot;: &quot;education&quot;},
+    {&quot;old&quot;: &quot;country&quot;, &quot;rule&quot;: &quot;null&quot;, &quot;reason&quot;: &quot;FoxAPIs does not return a location&quot;},
+    {&quot;old&quot;: &quot;country_full_name&quot;, &quot;rule&quot;: &quot;null&quot;, &quot;reason&quot;: &quot;FoxAPIs does not return a location&quot;},
+    {&quot;old&quot;: &quot;city&quot;, &quot;rule&quot;: &quot;null&quot;, &quot;reason&quot;: &quot;FoxAPIs does not return a location&quot;},
+    {&quot;old&quot;: &quot;state&quot;, &quot;rule&quot;: &quot;null&quot;, &quot;reason&quot;: &quot;FoxAPIs does not return a location&quot;},
+    {&quot;old&quot;: &quot;follower_count&quot;, &quot;rule&quot;: &quot;null&quot;, &quot;reason&quot;: &quot;FoxAPIs does not return follower counts&quot;},
+    {&quot;old&quot;: &quot;connections&quot;, &quot;rule&quot;: &quot;null&quot;, &quot;reason&quot;: &quot;no equivalent in FoxAPIs&quot;},
+    {&quot;old&quot;: &quot;people_also_viewed&quot;, &quot;rule&quot;: &quot;null&quot;, &quot;reason&quot;: &quot;FoxAPIs does not return a similar-people list&quot;},
+    {&quot;old&quot;: &quot;similarly_named_profiles&quot;, &quot;rule&quot;: &quot;null&quot;, &quot;reason&quot;: &quot;no equivalent in FoxAPIs (same-name people are listed under a different field inside the FoxAPIs profile)&quot;},
+    {&quot;old&quot;: &quot;background_cover_image_url&quot;, &quot;rule&quot;: &quot;null&quot;, &quot;reason&quot;: &quot;no equivalent in FoxAPIs&quot;},
+    {&quot;old&quot;: &quot;languages&quot;, &quot;rule&quot;: &quot;null&quot;, &quot;reason&quot;: &quot;no equivalent in FoxAPIs&quot;},
+    {&quot;old&quot;: &quot;industry&quot;, &quot;rule&quot;: &quot;null&quot;, &quot;reason&quot;: &quot;no equivalent in FoxAPIs&quot;},
+    {&quot;old&quot;: &quot;gender&quot;, &quot;rule&quot;: &quot;null&quot;, &quot;reason&quot;: &quot;no equivalent in FoxAPIs&quot;},
+    {&quot;old&quot;: &quot;birth_date&quot;, &quot;rule&quot;: &quot;null&quot;, &quot;reason&quot;: &quot;no equivalent in FoxAPIs&quot;},
+    {&quot;old&quot;: &quot;inferred_salary&quot;, &quot;rule&quot;: &quot;null&quot;, &quot;reason&quot;: &quot;no equivalent in FoxAPIs&quot;},
+    {&quot;old&quot;: &quot;personal_emails&quot;, &quot;rule&quot;: &quot;null&quot;, &quot;reason&quot;: &quot;FoxAPIs returns email candidates labelled by source, not personal emails; not mapped&quot;},
+    {&quot;old&quot;: &quot;personal_numbers&quot;, &quot;rule&quot;: &quot;null&quot;, &quot;reason&quot;: &quot;FoxAPIs phones are business numbers found with a source address; not mapped&quot;},
+    {&quot;old&quot;: &quot;articles&quot;, &quot;rule&quot;: &quot;null&quot;, &quot;reason&quot;: &quot;no equivalent in FoxAPIs&quot;},
+    {&quot;old&quot;: &quot;groups&quot;, &quot;rule&quot;: &quot;null&quot;, &quot;reason&quot;: &quot;no equivalent in FoxAPIs&quot;},
+    {&quot;old&quot;: &quot;extra&quot;, &quot;rule&quot;: &quot;null&quot;, &quot;reason&quot;: &quot;no equivalent in FoxAPIs&quot;},
+]
+
+
+def _blank(v):
+    return None if v is None or v == &quot;&quot; else v
+
+
+def to_old_shape(p):
+    out, derived, unfilled = {}, [], []
+    for r in RULES:
+        if r[&quot;rule&quot;] == &quot;null&quot;:
+            out[r[&quot;old&quot;]] = None
+            unfilled.append({&quot;field&quot;: r[&quot;old&quot;], &quot;reason&quot;: r[&quot;reason&quot;]})
+            continue
+        if r[&quot;rule&quot;] == &quot;passthrough&quot;:
+            v = p.get(r[&quot;from&quot;])
+            out[r[&quot;old&quot;]] = v if isinstance(v, list) else None
+            if out[r[&quot;old&quot;]] is None:
+                unfilled.append({&quot;field&quot;: r[&quot;old&quot;], &quot;reason&quot;: &quot;FoxAPIs returned no list&quot;})
+            continue
+        v = TRANSFORMS[r[&quot;transform&quot;]](p) if r[&quot;rule&quot;] == &quot;derived&quot; else _blank(p.get(r[&quot;from&quot;]))
+        out[r[&quot;old&quot;]] = v
+        if v is None:
+            unfilled.append({&quot;field&quot;: r[&quot;old&quot;], &quot;reason&quot;: &quot;FoxAPIs returned no value to build it from&quot; if r[&quot;rule&quot;] == &quot;derived&quot; else &quot;FoxAPIs returned an empty value&quot;})
+        elif r[&quot;rule&quot;] == &quot;derived&quot;:
+            derived.append(r[&quot;old&quot;])
+    out[&quot;_resurrect&quot;] = {&quot;source&quot;: &quot;foxapis&quot;, &quot;unfilled&quot;: unfilled, &quot;derived&quot;: derived}
+    return out
+
+
+class ResurrectedResponse:
+    &quot;&quot;&quot;Looks like a requests response: .json(), .status_code, .ok, .text, .raise_for_status().&quot;&quot;&quot;
+
+    def __init__(self, data, status_code=200):
+        self._data = data
+        self.status_code = status_code
+        self.ok = status_code &lt; 400
+        self.text = json.dumps(data)
+
+    def json(self):
+        return self._data
+
+    def raise_for_status(self):
+        if not self.ok:
+            raise RuntimeError(&quot;FoxAPIs answered %s&quot; % self.status_code)
+
+
+def _foxapis(method, path, headers, body=None):
+    data = json.dumps(body).encode() if body is not None else None
+    req = urllib.request.Request(&quot;https://api.foxapis.com&quot; + path, data=data, method=method, headers=headers)
+    try:
+        with urllib.request.urlopen(req, timeout=120) as r:
+            raw = r.read().decode() or &quot;null&quot;
+            return r.status, json.loads(raw)
+    except urllib.error.HTTPError as e:
+        return e.code, None
+
+
+def resurrected_person_profile(name=None, company=None, domain=None, url=None):
+    if not name:
+        raise ValueError(&quot;name is required by FoxAPIs: full name of the person (the old call only had a profile address)&quot;)
+    key = os.environ.get(&quot;FOXAPIS_KEY&quot;)
+    if not key:
+        raise RuntimeError(&quot;Set FOXAPIS_KEY (free key: https://foxapis.com/trial)&quot;)
+    headers = {&quot;Authorization&quot;: &quot;Bearer &quot; + key, &quot;Content-Type&quot;: &quot;application/json&quot;, &quot;User-Agent&quot;: &quot;resurrect/0.1&quot;}
+    body = {}
+    if name:
+        body[&quot;name&quot;] = name
+    if company:
+        body[&quot;company&quot;] = company
+    if domain:
+        body[&quot;domain&quot;] = domain
+    if url:
+        body[&quot;linkedin_url&quot;] = url
+    status, data = _foxapis(&quot;POST&quot;, &quot;/v1/enrich_person&quot;, headers, body)
+    if status in (401, 403):
+        raise RuntimeError(&quot;FoxAPIs rejected the key (status %s)&quot; % status)
+    if status &gt;= 400:
+        raise RuntimeError(&quot;FoxAPIs answered %s&quot; % status)
+    p = (data or {}).get(&quot;profile&quot;)
+    if not isinstance(p, dict):
+        return None
+    return to_old_shape(p)
+
+if __name__ == &quot;__main__&quot;:
+    import sys
+
+    arg = json.loads(sys.argv[1]) if len(sys.argv) &gt; 1 else {}
+    print(json.dumps(resurrected_person_profile(**arg), indent=2))
+</code></pre>
+<h3>Field mapping</h3>
+<p>Proxycurl ended 2025-07-04. <a href="https://nubela.co/blog/goodbye-proxycurl/" rel="noopener">Source notice</a>, read 2026-11-23.</p>
+<p>Target: FoxAPIs <code>POST /v1/enrich_person</code>.</p>
+<table><tr><th scope="col">Old field</th><th scope="col">FoxAPIs field</th><th scope="col">Rule</th><th scope="col">Basis</th></tr><tr><td><code>full_name</code></td><td><code>profile.full_name</code></td><td>copy</td><td>real sample 2026-11-22</td></tr><tr><td><code>first_name</code></td><td><code>derived from profile.full_name</code></td><td>derived</td><td>derived: first token, only when the name has exactly two words</td></tr><tr><td><code>last_name</code></td><td><code>derived from profile.full_name</code></td><td>derived</td><td>derived: second token, only when the name has exactly two words</td></tr><tr><td><code>public_identifier</code></td><td><code>derived from profile.linkedin_url</code></td><td>derived</td><td>derived: last path part of the profile address</td></tr><tr><td><code>profile_pic_url</code></td><td><code>profile.photo_url</code></td><td>copy</td><td>real sample 2026-11-22 (field present, empty in the sample)</td></tr><tr><td><code>occupation</code></td><td><code>derived from profile.title + profile.employer</code></td><td>derived</td><td>derived: title at employer, only when both are non-empty</td></tr><tr><td><code>headline</code></td><td><code>derived from profile.title + profile.employer</code></td><td>derived</td><td>derived: title at employer, only when both are non-empty</td></tr><tr><td><code>summary</code></td><td><code>profile.summary</code></td><td>copy</td><td>real sample 2026-11-22 (a one-line text; style differs from the old summary)</td></tr><tr><td><code>experiences</code></td><td><code>profile.employment_history</code></td><td>passthrough</td><td>field present in sample (empty list); items are returned as FoxAPIs items, NOT reshaped to the old item layout</td></tr><tr><td><code>education</code></td><td><code>profile.education</code></td><td>passthrough</td><td>field present in sample (empty list); items are returned as FoxAPIs items, NOT reshaped to the old item layout</td></tr><tr><td><code>country</code></td><td>none: FoxAPIs does not return a location</td><td>null</td><td>alternatives page, 2026-11-22</td></tr><tr><td><code>country_full_name</code></td><td>none: FoxAPIs does not return a location</td><td>null</td><td>alternatives page, 2026-11-22</td></tr><tr><td><code>city</code></td><td>none: FoxAPIs does not return a location</td><td>null</td><td>alternatives page, 2026-11-22</td></tr><tr><td><code>state</code></td><td>none: FoxAPIs does not return a location</td><td>null</td><td>alternatives page, 2026-11-22</td></tr><tr><td><code>follower_count</code></td><td>none: FoxAPIs does not return follower counts</td><td>null</td><td>alternatives page, 2026-11-22</td></tr><tr><td><code>connections</code></td><td>none: no equivalent in FoxAPIs</td><td>null</td><td>no field in the sample</td></tr><tr><td><code>people_also_viewed</code></td><td>none: FoxAPIs does not return a similar-people list</td><td>null</td><td>alternatives page, 2026-11-22</td></tr><tr><td><code>similarly_named_profiles</code></td><td>none: no equivalent in FoxAPIs (same-name people are listed under a different field inside the FoxAPIs profile)</td><td>null</td><td>no matching field in the sample</td></tr><tr><td><code>background_cover_image_url</code></td><td>none: no equivalent in FoxAPIs</td><td>null</td><td>no field in the sample</td></tr><tr><td><code>languages</code></td><td>none: no equivalent in FoxAPIs</td><td>null</td><td>no field in the sample</td></tr><tr><td><code>industry</code></td><td>none: no equivalent in FoxAPIs</td><td>null</td><td>no field in the sample</td></tr><tr><td><code>gender</code></td><td>none: no equivalent in FoxAPIs</td><td>null</td><td>no field in the sample</td></tr><tr><td><code>birth_date</code></td><td>none: no equivalent in FoxAPIs</td><td>null</td><td>no field in the sample</td></tr><tr><td><code>inferred_salary</code></td><td>none: no equivalent in FoxAPIs</td><td>null</td><td>no field in the sample</td></tr><tr><td><code>personal_emails</code></td><td>none: FoxAPIs returns email candidates labelled by source, not personal emails; not mapped</td><td>null</td><td>alternatives page, 2026-11-22</td></tr><tr><td><code>personal_numbers</code></td><td>none: FoxAPIs phones are business numbers found with a source address; not mapped</td><td>null</td><td>sample 2026-11-22</td></tr><tr><td><code>articles</code></td><td>none: no equivalent in FoxAPIs</td><td>null</td><td>no field in the sample</td></tr><tr><td><code>groups</code></td><td>none: no equivalent in FoxAPIs</td><td>null</td><td>no field in the sample</td></tr><tr><td><code>extra</code></td><td>none: no equivalent in FoxAPIs</td><td>null</td><td>no field in the sample</td></tr></table>
+<p class="small">The old field list is the one in the engine's design notes; Nubela's own Person Profile reference is no longer online, so old field names are not re-verified here.</p>
+</section>
+<section aria-labelledby="h-02-clearbit-company"><h2 id="h-02-clearbit-company">Clearbit company enrichment (JavaScript)</h2><p>A Node function that enriches a company from its domain. Clearbit has moved into another product and published no end date, so the engine labels it moved, not shut down. The closest FoxAPIs call returns a written snapshot, not company fields, so the mapping is marked partial and almost every old field is listed as not filled.</p>
+<h3>Input: <code>input.js</code></h3><pre><code>// Company enrichment from a website domain, as many apps wrote it.
+const CLEARBIT_KEY = process.env.CLEARBIT_KEY;
+
+export async function enrichCompany(domain) {
+  const res = await fetch(`https://company.clearbit.com/v2/companies/find?domain=${domain}`, {
+    headers: { Authorization: `Bearer ${CLEARBIT_KEY}` },
+  });
+  if (!res.ok) return null;
+  const company = await res.json();
+  return { name: company.name, sector: company.category &amp;&amp; company.category.sector };
+}
+</code></pre>
+<h3>Generated JavaScript</h3><pre><code>import { pathToFileURL } from &quot;node:url&quot;;
+
+// RESURRECT: replaces the Clearbit Enrichment &quot;Company enrichment (by domain)&quot; call (moved into another product, no end date published). It now calls FoxAPIs POST /v1/get_company_snapshot.
+// Needs FOXAPIS_KEY in the environment. A free key: https://foxapis.com/trial
+// PARTIAL. get_company_snapshot answers with a written due-diligence snapshot (async: 202, then poll), not company fields. The generated code returns that snapshot unchanged. Almost no old field can be filled; the table says which.
+const asResponse = (data, status = 200) =&gt; ({ ok: status &lt; 400, status, data, json: async () =&gt; data, text: async () =&gt; JSON.stringify(data) });
+async function waitForJob(jobId, headers) {
+  for (let i = 0; i &lt; 90; i += 1) {
+    const res = await fetch(&quot;https://api.foxapis.com&quot; + &quot;/v1/jobs/&quot; + encodeURIComponent(jobId), { headers });
+    if (!res.ok) throw new Error(&quot;FoxAPIs job poll answered &quot; + res.status);
+    const job = await res.json();
+    if (job.status === &quot;done&quot;) return job;
+    if (job.status === &quot;failed&quot; || job.status === &quot;error&quot;) throw new Error(&quot;FoxAPIs job &quot; + job.status);
+    await new Promise((r) =&gt; setTimeout(r, 2000));
+  }
+  throw new Error(&quot;FoxAPIs job did not finish in time; poll &quot; + jobId + &quot; again later&quot;);
+}
+export async function resurrectedCompanyFind({ domain } = {}) {
+  if (!domain) throw new Error(&quot;domain is required by FoxAPIs: company website domain&quot;);
+  const key = process.env.FOXAPIS_KEY;
+  if (!key) throw new Error(&quot;Set FOXAPIS_KEY (free key: https://foxapis.com/trial)&quot;);
+  const headers = { Authorization: `Bearer ${key}`, &quot;Content-Type&quot;: &quot;application/json&quot; };
+  const body = {};
+  if (domain) body.domain = domain;
+  const res = await fetch(&quot;https://api.foxapis.com/v1/get_company_snapshot&quot;, { method: &quot;POST&quot;, headers, body: JSON.stringify(body) });
+  if (res.status === 401 || res.status === 403) throw new Error(&quot;FoxAPIs rejected the key (status &quot; + res.status + &quot;)&quot;);
+  if (res.status !== 202 &amp;&amp; !res.ok) throw new Error(&quot;FoxAPIs answered &quot; + res.status);
+  const first = await res.json();
+  const job = res.status === 202 ? await waitForJob(first.job_id, headers) : first;
+  return job.result ?? null;
+}
+
+if (process.argv[1] &amp;&amp; import.meta.url === pathToFileURL(process.argv[1]).href) {
+  const arg = process.argv[2] ? JSON.parse(process.argv[2]) : {};
+  console.log(JSON.stringify(await resurrectedCompanyFind(arg), null, 2));
+}
+</code></pre>
+<h3>Generated Python</h3><pre><code>import json
+import os
+import re
+import time
+import urllib.error
+import urllib.request
+
+# RESURRECT: replaces the Clearbit Enrichment &quot;Company enrichment (by domain)&quot; call (moved into another product, no end date published). It now calls FoxAPIs POST /v1/get_company_snapshot.
+# Needs FOXAPIS_KEY in the environment. A free key: https://foxapis.com/trial
+# PARTIAL. get_company_snapshot answers with a written due-diligence snapshot (async: 202, then poll), not company fields. The generated code returns that snapshot unchanged. Almost no old field can be filled; the table says which.
+
+
+class ResurrectedResponse:
+    &quot;&quot;&quot;Looks like a requests response: .json(), .status_code, .ok, .text, .raise_for_status().&quot;&quot;&quot;
+
+    def __init__(self, data, status_code=200):
+        self._data = data
+        self.status_code = status_code
+        self.ok = status_code &lt; 400
+        self.text = json.dumps(data)
+
+    def json(self):
+        return self._data
+
+    def raise_for_status(self):
+        if not self.ok:
+            raise RuntimeError(&quot;FoxAPIs answered %s&quot; % self.status_code)
+
+
+def _foxapis(method, path, headers, body=None):
+    data = json.dumps(body).encode() if body is not None else None
+    req = urllib.request.Request(&quot;https://api.foxapis.com&quot; + path, data=data, method=method, headers=headers)
+    try:
+        with urllib.request.urlopen(req, timeout=120) as r:
+            raw = r.read().decode() or &quot;null&quot;
+            return r.status, json.loads(raw)
+    except urllib.error.HTTPError as e:
+        return e.code, None
+
+
+def _wait_for_job(job_id, headers):
+    for _ in range(90):
+        status, job = _foxapis(&quot;GET&quot;, &quot;/v1/jobs/&quot; + job_id, headers)
+        if status &gt;= 400:
+            raise RuntimeError(&quot;FoxAPIs job poll answered %s&quot; % status)
+        if job.get(&quot;status&quot;) == &quot;done&quot;:
+            return job
+        if job.get(&quot;status&quot;) in (&quot;failed&quot;, &quot;error&quot;):
+            raise RuntimeError(&quot;FoxAPIs job &quot; + job[&quot;status&quot;])
+        time.sleep(2)
+    raise RuntimeError(&quot;FoxAPIs job did not finish in time; poll &quot; + job_id + &quot; again later&quot;)
+
+
+def resurrected_company_find(domain=None):
+    if not domain:
+        raise ValueError(&quot;domain is required by FoxAPIs: company website domain&quot;)
+    key = os.environ.get(&quot;FOXAPIS_KEY&quot;)
+    if not key:
+        raise RuntimeError(&quot;Set FOXAPIS_KEY (free key: https://foxapis.com/trial)&quot;)
+    headers = {&quot;Authorization&quot;: &quot;Bearer &quot; + key, &quot;Content-Type&quot;: &quot;application/json&quot;, &quot;User-Agent&quot;: &quot;resurrect/0.1&quot;}
+    body = {}
+    if domain:
+        body[&quot;domain&quot;] = domain
+    status, data = _foxapis(&quot;POST&quot;, &quot;/v1/get_company_snapshot&quot;, headers, body)
+    if status in (401, 403):
+        raise RuntimeError(&quot;FoxAPIs rejected the key (status %s)&quot; % status)
+    if status not in (200, 202):
+        raise RuntimeError(&quot;FoxAPIs answered %s&quot; % status)
+    job = _wait_for_job(data[&quot;job_id&quot;], headers) if status == 202 else data
+    return job.get(&quot;result&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    import sys
+
+    arg = json.loads(sys.argv[1]) if len(sys.argv) &gt; 1 else {}
+    print(json.dumps(resurrected_company_find(**arg), indent=2))
+</code></pre>
+<h3>Field mapping</h3>
+<p>Clearbit Enrichment moved into another product, no end date published. <a href="https://clearbit.com/" rel="noopener">Source notice</a>, read 2026-11-22.</p>
+<p>Target: FoxAPIs <code>POST /v1/get_company_snapshot</code>.</p>
+<table><tr><th scope="col">Old field</th><th scope="col">FoxAPIs field</th><th scope="col">Rule</th><th scope="col">Basis</th></tr><tr><td><code>name</code></td><td>none: not claimed: a similar field (<code>subject_name</code>) appears in a FoxAPIs company report sample, but no snapshot sample was captured to confirm it</td><td>null</td><td>company report sample 2026-11-23</td></tr><tr><td><code>domain</code></td><td>none: FoxAPIs does not return a domain field; use the one you sent</td><td>null</td><td>no field in the sample</td></tr><tr><td><code>legalName</code></td><td>none: no equivalent field</td><td>null</td><td>no field in the sample</td></tr><tr><td><code>description</code></td><td>none: the snapshot has written sections, not one description field</td><td>null</td><td>sample 2026-11-23</td></tr><tr><td><code>foundedYear</code></td><td>none: no equivalent field</td><td>null</td><td>no field in the sample</td></tr><tr><td><code>category (sector, industry)</code></td><td>none: no equivalent field</td><td>null</td><td>no field in the sample</td></tr><tr><td><code>metrics (employees, raised, revenue)</code></td><td>none: no equivalent field; figures appear only inside written sections</td><td>null</td><td>sample 2026-11-23</td></tr><tr><td><code>location, geo</code></td><td>none: no equivalent field</td><td>null</td><td>no field in the sample</td></tr><tr><td><code>logo</code></td><td>none: no equivalent field</td><td>null</td><td>no field in the sample</td></tr><tr><td><code>linkedin, twitter, facebook, crunchbase handles</code></td><td>none: no equivalent field on the company call</td><td>null</td><td>no field in the sample</td></tr><tr><td><code>tech, tags</code></td><td>none: no equivalent field</td><td>null</td><td>no field in the sample</td></tr></table>
+<p class="small">Clearbit's field reference could not be read (FoxAPIs alternatives page, 2026-11-22), so the old field names above are as remembered and not verified.</p>
+</section>
+<section aria-labelledby="h-03-bing-search"><h2 id="h-03-bing-search">Bing Search API (JavaScript and Python)</h2><p>Web search through the Bing Search API, retired 2025-08-11. FoxAPIs has no web search endpoint, so the engine says so, leaves the code alone and adds a marker comment. This is the honest case: nothing is invented.</p>
+<h3>Input: <code>input.js</code></h3><pre><code>// Web search for a query, using the Bing Search API.
+const BING_KEY = process.env.BING_SEARCH_KEY;
+
+export async function searchWeb(query) {
+  const url = &quot;https://api.bing.microsoft.com/v7.0/search?q=&quot; + encodeURIComponent(query);
+  const res = await fetch(url, { headers: { &quot;Ocp-Apim-Subscription-Key&quot;: BING_KEY } });
+  const data = await res.json();
+  return data.webPages.value.map((p) =&gt; ({ title: p.name, link: p.url }));
+}
+</code></pre>
+<h3>Input: <code>input.py</code></h3><pre><code>import os
+import requests
+
+BING_KEY = os.environ[&quot;BING_SEARCH_KEY&quot;]
+
+
+def search_web(query):
+    response = requests.get(
+        &quot;https://api.bing.microsoft.com/v7.0/search&quot;,
+        params={&quot;q&quot;: query},
+        headers={&quot;Ocp-Apim-Subscription-Key&quot;: BING_KEY},
+    )
+    return [{&quot;title&quot;: p[&quot;name&quot;], &quot;link&quot;: p[&quot;url&quot;]} for p in response.json()[&quot;webPages&quot;][&quot;value&quot;]]
+</code></pre>
+<h3>Output: <code>output.js</code> (your code, plus the marker)</h3><pre><code>// Web search for a query, using the Bing Search API.
+const BING_KEY = process.env.BING_SEARCH_KEY;
+
+export async function searchWeb(query) {
+  const url = &quot;https://api.bing.microsoft.com/v7.0/search?q=&quot; + encodeURIComponent(query);
+  // RESURRECT: no FoxAPIs equivalent
+  const res = await fetch(url, { headers: { &quot;Ocp-Apim-Subscription-Key&quot;: BING_KEY } });
+  const data = await res.json();
+  return data.webPages.value.map((p) =&gt; ({ title: p.name, link: p.url }));
+}
+</code></pre>
+<h3>Output: <code>output.py</code> (your code, plus the marker)</h3><pre><code>import os
+import requests
+
+BING_KEY = os.environ[&quot;BING_SEARCH_KEY&quot;]
+
+
+def search_web(query):
+    # RESURRECT: no FoxAPIs equivalent
+    response = requests.get(
+        &quot;https://api.bing.microsoft.com/v7.0/search&quot;,
+        params={&quot;q&quot;: query},
+        headers={&quot;Ocp-Apim-Subscription-Key&quot;: BING_KEY},
+    )
+    return [{&quot;title&quot;: p[&quot;name&quot;], &quot;link&quot;: p[&quot;url&quot;]} for p in response.json()[&quot;webPages&quot;][&quot;value&quot;]]
+</code></pre>
+<h3>Field mapping</h3>
+<p>Bing Search APIs ended 2025-08-11. <a href="https://learn.microsoft.com/en-us/lifecycle/announcements/bing-search-api-retirement" rel="noopener">Source notice</a>, read 2026-11-23.</p>
+<p>No FoxAPIs equivalent. There is no web search endpoint in the FoxAPIs catalog. Follow Microsoft's own notice for what replaces it.</p>
+</section>
+</main>
+<footer>
+<p class="disclaimer">Not affiliated with, endorsed by or sponsored by the services named here. Names are used only to say which service your code calls.</p>
+<p>Built with Kiro for Kiroween 2026. Source and licence: <a href="https://github.com/OsakaSaul/scriptsold">github.com/OsakaSaul/scriptsold</a>.</p>
+</footer>
+</body>
+</html>
