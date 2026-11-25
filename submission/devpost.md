@@ -50,7 +50,7 @@ The full table is in submission/kiro-usage.md. Short version:
 - Property-style tests: tests/properties/ (P1 to P4, P6 to P11) and tests/registry.test.js (P5 and P12). They use a seeded random generator, not the fast-check library.
 - MCP and powers: not used.
 
-What Kiro produced and what it did not: the specs, steering and hook were drafted by an AI coding agent as inputs, and the engine in src/, the page and the tests were written by an AI coding agent working from those specs. As of this draft no code was written by Kiro and the tasks in tasks.md are not ticked. That is why this draft is not ready to submit: the hackathon requires an app built with Kiro. See the checks below.
+What Kiro produced and what it did not: the specs, steering and hook were drafted by an AI coding agent as inputs, and the engine in src/, the page and the tests were written by an AI coding agent working from those specs. As of this draft no code was written by Kiro. In tasks.md, tasks 1 to 9 are ticked as built before Kiro was used, and tasks 10 to 20 are open for Kiro. That is why this draft is not ready to submit: the hackathon requires an app built with Kiro. See the checks below.
 
 ### Blanks for what Kiro actually did
 
