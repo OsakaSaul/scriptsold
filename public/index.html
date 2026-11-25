@@ -100,6 +100,14 @@
     <p>The replacement code needs a FoxAPIs key in the environment variable <code>FOXAPIS_KEY</code>. A free key with welcome credits, no card, is at <a href="https://foxapis.com/trial" target="_blank" rel="noopener noreferrer" title="Get a free FoxAPIs key (opens in a new tab)" aria-label="Get a free FoxAPIs key, opens in a new tab">foxapis.com/trial</a>. For what each call costs, see <a href="https://foxapis.com/pricing" target="_blank" rel="noopener noreferrer" title="FoxAPIs pricing (opens in a new tab)" aria-label="FoxAPIs pricing, opens in a new tab">foxapis.com/pricing</a>. The key is never written into the code Resurrect gives you.</p>
     <p><a href="examples.html" title="Open three worked examples with input, output and field tables" aria-label="See three worked examples">See three worked examples</a>, each with the input, the JavaScript and Python output, and the field-mapping table.</p>
   </section>
+
+  <section aria-labelledby="compat-h" class="key">
+    <h2 id="compat-h">Keep your old code working</h2>
+    <p>If you cannot change the code that calls Proxycurl, point it at this site instead. The compat route accepts the old request shape and returns the old response shape filled from FoxAPIs data. Change only the host in your old calls; keep everything else as it is.</p>
+    <p>Some fields come back as null, because FoxAPIs does not supply them. Each null field has a reason in the response body under <code>_resurrect.unfilled</code>. The fields that are always null for the person profile are: location (city, state, country), follower count, connections, personal contact details, and inferred fields like salary, gender and birth date. Fields derived from the full name (first name, last name) come back as null when the name is not exactly two words.</p>
+    <p>To try it without a key, send the header <code>X-Resurrect-Sample: 1</code>. The response comes from a recorded fixture and the body includes <code>_resurrect.sample: true</code> so it is never mistaken for live data.</p>
+    <p class="small">Supported routes: Proxycurl person profile (<code>GET /compat/api/v2/linkedin</code>) and work email lookup (<code>GET /compat/api/linkedin/profile/email</code>). Pass a FoxAPIs key as <code>Authorization: Bearer &lt;your-key&gt;</code>. The person profile route requires a <code>name</code> query parameter; without it the route returns a 422 before calling FoxAPIs and spending any credits.</p>
+  </section>
 </main>
 
 <footer>
