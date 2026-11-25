@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Do the work yourself; never use the Agent/sub-agent tool. Stay on Sonnet unless the task says otherwise.
+No sub-agents (Agent tool) for building, research sweeps or parallel work: they multiply usage against Saul's weekly limit. Read a page or two directly (WebFetch) instead. A single small read-only fetch is not a violation; do not file bug reports for it. Stay on Sonnet unless the task says otherwise.
 
 ## Versions
 
