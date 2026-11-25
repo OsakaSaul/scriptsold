@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "fetch": {
+      "command": "npx",
+      "args": ["-y", "@kazuph/mcp-fetch"],
+      "description": "Fetch and read web pages. Used here to verify registry source links and to read FoxAPIs endpoint documentation without leaving the agent session."
+    }
+  }
+}
