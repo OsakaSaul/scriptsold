@@ -4,7 +4,7 @@ import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { root } from './helpers.js';
-import { trimmedCatalog } from '../scripts/build-site.mjs';
+import { trimmedCatalog, graveyardPage } from '../scripts/build-site.mjs';
 
 const SECRET_SHAPES = new RegExp(['s' + 'k_(live|test)_', 'gh[po]_[A-Za-z0-9]{20}', 'xox[baprs]-[A-Za-z0-9-]{10}', 'AK' + 'IA[0-9A-Z]{16}', '-----BEGIN [A-Z ]*PRIV' + 'ATE KEY'].join('|'));
 const read = (...p) => readFileSync(join(root, ...p), 'utf8');
@@ -116,4 +116,19 @@ test('no secrets are committed: the tree has no keys, tokens or env files', () =
     const text = readFileSync(f, 'utf8');
     assert.ok(!SECRET_SHAPES.test(text), `${f} looks like it holds a secret`);
   }
+});
+
+test('the graveyard page lists every registry entry with its status, date and source link', () => {
+  const registry = JSON.parse(read('data', 'registry.json'));
+  const html = graveyardPage();
+  for (const api of registry.apis) {
+    assert.ok(html.includes(api.name), `graveyard missing: ${api.name}`);
+    assert.ok(html.includes(api.source.url), `graveyard missing source for: ${api.name}`);
+    assert.ok(html.includes(api.status), `graveyard missing status for: ${api.name}`);
+  }
+  assert.ok(html.includes('Not affiliated with'));
+  assert.match(html, /<html lang="en">/);
+  assert.match(html, /<title>[^<]{5,}<\/title>/);
+  // built file on disk matches the function output
+  assert.equal(read('public', 'graveyard.html'), html);
 });

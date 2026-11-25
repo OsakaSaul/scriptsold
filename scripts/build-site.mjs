@@ -44,6 +44,48 @@ export function buildSite() {
     }
   }
   writeFileSync(join(pub, 'examples.html'), examplesPage());
+  writeFileSync(join(pub, 'graveyard.html'), graveyardPage());
+}
+
+export function graveyardPage() {
+  const { registry } = loadData();
+  const cards = registry.apis.map((api) => {
+    const statusWord = api.status === 'ended' ? 'ended' : api.status === 'scheduled' ? 'scheduled' : 'moved';
+    const dateText = api.date ? ` ${api.date}` : '';
+    return `<li class="g-card">
+<span class="nm">${esc(api.name)}</span>
+<span class="badge ${esc(statusWord)}">${esc(statusWord)}${esc(dateText)}</span>
+<p class="g-summary">${esc(api.summary)}</p>
+<a href="${esc(api.source.url)}" target="_blank" rel="noopener noreferrer" title="Vendor notice for ${esc(api.name)} (opens in a new tab)" aria-label="Vendor notice for ${esc(api.name)}, opens in a new tab">Source notice, read ${esc(api.source.read_on)}</a>
+</li>`;
+  });
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+<title>Resurrect: the graveyard</title>
+<meta name="description" content="Every dead and ending API tracked by Resurrect. Each entry carries a dated shutdown notice from the vendor.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top">
+<h1>The graveyard</h1>
+<p class="lead">Every API tracked here carries a dated notice from the vendor. Status words are exact: ended (shut down), scheduled (still live, end date announced), moved (no end date published, never called shut down). <a href="index.html" title="Back to the paste box" aria-label="Back to the paste box">Back to the paste box</a>.</p>
+</header>
+<main>
+<ul class="g-list" aria-label="Dead and ending APIs">
+${cards.join('\n')}
+</ul>
+</main>
+<footer>
+<p class="disclaimer">Not affiliated with, endorsed by or sponsored by the services named here. Names are used only to say which service your code calls.</p>
+<p>Built for Kiroween 2026. Source and licence (MIT): <a href="https://github.com/OsakaSaul/scriptsold" target="_blank" rel="noopener noreferrer" title="Source code on GitHub (opens in a new tab)" aria-label="Source code on GitHub, opens in a new tab">github.com/OsakaSaul/scriptsold</a>.</p>
+</footer>
+</body>
+</html>
+`;
 }
 
 function read(dir, f) {
