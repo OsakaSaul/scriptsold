@@ -1,5 +1,7 @@
 # Requirements: Resurrect (scriptsold.com)
 
+Status 2026-11-25: requirements 1 to 3, 7 and 8 are largely built (not by Kiro) as a browser-only rewrite. There is no server rewrite route, so the HTTP 413 wording in 1.4 and the limits in 6.3 apply to the compat route when it is built. Requirement 4 (compat endpoint), 5.1 and 5.2 (sample mode) and parts of 6 and 7 are open. tasks.md says which.
+
 Category: Kiroween 2026, Resurrection. Draft written 2026-11-23 as input for Kiro. Kiro may refine these; keep requirement ids stable.
 
 ## Introduction

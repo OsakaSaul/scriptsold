@@ -1,0 +1,5 @@
+# Cloudflare Pages project. Address: https://scriptsold.pages.dev
+# Deploy with: npm run deploy (one-time "npx wrangler login" by the owner first).
+name = "scriptsold"
+pages_build_output_dir = "public"
+compatibility_date = "2026-11-01"

@@ -1,5 +1,7 @@
 # Design: Resurrect (scriptsold.com)
 
+Status 2026-11-25: this is the first plan. What was built is plain JavaScript with node --test and no dependencies (see .kiro/steering/tech.md, which wins over this file). Compat routes are not built; when built they are JavaScript Pages Functions. See tasks.md.
+
 ## Overview
 
 Resurrect is a small website plus a few serverless routes. A visitor pastes old code. A rewrite engine (pure functions, no network) finds calls to dead APIs and returns code for FoxAPIs. A compat route lets old clients keep working by translating FoxAPIs responses into the old shape.

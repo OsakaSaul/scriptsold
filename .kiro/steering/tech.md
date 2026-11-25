@@ -1,31 +1,24 @@
 # Tech
 
-## Stack
-- TypeScript (strict), Node 20 for tooling.
-- Hosting: Cloudflare Pages with Pages Functions. Static front end in `public/` (vanilla HTML, CSS, JS; no framework, no build step for the UI beyond TypeScript compile).
-- Tests: vitest for unit and contract tests; fast-check for property-based tests.
-- Lint/format: ESLint + Prettier.
-- No database, no KV, no R2 in the MVP.
+## Stack (as built; do not replace it)
+- Plain JavaScript, ES modules, Node 22 (package.json allows 20 or later). No TypeScript, no runtime dependencies.
+- Tests: node --test. Property-style tests live in tests/properties/ and use the seeded generator in tests/properties/gen.js.
+- Engine in src/ is pure functions. scripts/build-site.mjs copies it into public/engine/, so never edit public/engine/ by hand.
+- Hosting: Cloudflare Pages. Static site in public/. Compat routes, when added, are Pages Functions in functions/ (JavaScript).
+- No database, KV or R2. No AI or model calls in the app.
 
 ## Rules
-- Core logic (`src/lib`) is pure functions with no network or file access, so it can be property-tested.
-- The only network call in the whole app is `fetch` to `https://api.foxapis.com` from the compat route. Host allow-list; never fetch a user-supplied URL.
-- The caller's FoxAPIs key is read from the `Authorization` header, forwarded and forgotten. Never log headers or bodies.
-- No AI/model calls in the MVP. If ever added, they must go through a FoxAPIs endpoint, never a direct provider key.
-- Secrets: none are needed in the repo. Never commit keys; tests read `FOXAPIS_KEY` from the environment and skip when absent.
-- Dependencies: keep to a minimum (vitest, fast-check, typescript, eslint, prettier, ajv for JSON Schema). Every dependency needs an OSI-approved licence.
-- Every dynamic response sets `Cache-Control: no-store`.
-- Accessibility: WCAG 2.1 AA, reduced-motion respected.
+- The only network call the app may make is from the compat route to https://api.foxapis.com. Never fetch a user-supplied address. The paste box makes no network request.
+- The caller's FoxAPIs key is forwarded and forgotten. Never log headers or bodies.
+- Never commit keys. Tests make no real FoxAPIs calls.
+- Every dynamic response sets Cache-Control: no-store.
+- Accessibility: WCAG 2.1 AA, reduced motion respected.
 
-## Commands (create these npm scripts)
-- `npm test` runs all tests including properties.
-- `npm run test:props` runs `tests/properties` only.
-- `npm run snapshot:catalog -- <path to catalog.json>` refreshes the catalog snapshot.
-- `npm run dev` runs `wrangler pages dev`.
+## Commands
+- npm test (all tests), npm run test:props (property tests only)
+- npm run build (copies the engine, builds pages and examples, checks the catalog snapshot)
+- npm run deploy (tests, build, deploy to Cloudflare Pages; needs a one-time wrangler login by the owner)
 
 ## Reference facts
-- FoxAPIs base `https://api.foxapis.com`; auth `Authorization: Bearer <key>`; free trial key at https://foxapis.com/trial.
-- Endpoints used: POST /v1/enrich_person (100 credits light), POST /v1/find_email (100 on a match, 0 otherwise), POST /v1/get_company_snapshot (async, poll GET /v1/jobs/{job_id}).
-
-## Decision 2026-11-23 (first engine commit)
-The core engine is plain JavaScript (ES modules, Node 20, zero runtime dependencies) and is tested with `node --test`, including seeded property-style tests in `tests/properties/`. This replaces the TypeScript, vitest and fast-check proposal above for the engine; the static page in `public/` runs the same modules in the browser. Pages Functions routes stay optional and are not part of this commit.
+- FoxAPIs base https://api.foxapis.com, auth Authorization: Bearer followed by the key. Free key: https://foxapis.com/trial.
+- Endpoint paths, status and credits come from data/catalog.snapshot.json, not from memory.

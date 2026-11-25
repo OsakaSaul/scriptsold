@@ -1,32 +1,21 @@
 # Structure
 
 ```
-.kiro/
-  specs/resurrect/        requirements.md, design.md, tasks.md
-  steering/               product.md, tech.md, structure.md
-  hooks/                  JSON hooks (tests on save, secret scan)
-  settings/mcp.json       MCP servers used while building
-  logs/                   saved Kiro run transcripts (committed as evidence)
-public/                   static site (index.html, styles.css, app.js, assets)
-functions/
-  api/rewrite.ts          POST /api/rewrite
-  api/registry.ts         GET /api/registry
-  compat/[[path]].ts      /compat/<dead-api>/...
-src/lib/                  pure logic: registry, detect, redact, rewrite, templates/, mapping/, compat/
-data/registry.json        dead-API registry (each entry has a source url)
-fixtures/                 recorded, redacted samples and JSON Schemas (old shapes, FoxAPIs responses)
-tests/
-  unit/                   example tests
-  properties/             property-based tests named p01-...ts to p12-...ts, matching design.md
-  contract/               compat output vs old-shape schemas
-scripts/                  snapshot-catalog.ts and similar tools
-KIRO-USAGE.md             write-up source for the hackathon
-README.md  LICENSE
+.kiro/specs/resurrect/   requirements.md, design.md, tasks.md
+.kiro/steering/          product.md, tech.md, structure.md
+.kiro/hooks/             JSON hooks (tests on save)
+data/                    registry.json (each entry has a source link), catalog.snapshot.json, foxapis-links.json
+src/                     engine: detect, redact, blocks, emit, fieldtable, registry, resurrect, cli
+public/                  static site; public/engine/ is generated
+functions/               not there yet: compat routes (tasks 13 to 15)
+fixtures/                recorded FoxAPIs samples and dead-API inputs
+tests/                   node --test; tests/properties/ for property-style tests
+scripts/                 build, snapshot, checks, deploy
+submission/              Devpost text, demo script, Kiro usage record
 ```
 
 ## Conventions
-- File names kebab-case; types PascalCase; one exported concern per file.
-- Each template file is named `<api>.<endpoint>.<language>.ts`.
-- Property test files start with the property id from design.md (`p07-old-schema-round-trip.test.ts`) and contain a comment linking the requirement ids.
-- A new dead API needs: a registry entry with source, a mapping file or a `noEquivalentReason`, fixtures, and tests, in that order.
-- Never add `.kiro` or any sub-folder to `.gitignore`.
+- File names kebab-case.
+- A new dead API needs, in order: a registry entry with a source, a mapping or a reason there is none, fixtures, tests.
+- Never add .kiro or any sub-folder to .gitignore.
+- design.md describes the first plan; where it names TypeScript, vitest or fast-check, tech.md wins.
