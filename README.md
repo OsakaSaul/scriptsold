@@ -77,6 +77,7 @@ submission/             Devpost draft, demo script (under 3 minutes), Kiro usage
 - The Person Profile call costs 100 credits, so it was checked against a recorded real response, not live. The work-email call was run live (no match, 0 credits) through both generated files.
 - Only calls whose whole statement can be found are replaced in place (JavaScript, TypeScript, Python, curl). Other languages get the snippets and a note.
 - Detection reads URLs, so a URL built from pieces in several variables may be missed.
+- The compat route rate limit (30 requests per 10 minutes per IP) is enforced in memory, per server instance. On Cloudflare Pages Functions each isolate is independent, so the effective limit across a scaled deployment is higher than 30. This is intentional for a low-traffic hackathon project; a production system would use Cloudflare Rate Limiting rules instead.
 
 ## How it was built
 

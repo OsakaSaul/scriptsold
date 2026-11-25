@@ -3,8 +3,14 @@
 // Task 13: sample mode. Task 14: live path.
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { onRequest } from '../functions/compat/[[path]].js';
+import { readFileSync } from 'node:fs';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { onRequest, limiter } from '../functions/compat/[[path]].js';
 import { fixture } from './helpers.js';
+
+const here = dirname(fileURLToPath(import.meta.url));
+const root = join(here, '..');
 
 // Build a fake Cloudflare Pages Function context.
 function ctx(path, { method = 'GET', headers = {}, body = null } = {}) {
@@ -230,4 +236,53 @@ test('live path: only api.foxapis.com is contacted', async () => {
     headers: { Authorization: 'Bearer live-test-key' },
   });
   assert.match(contactedUrl, /^https:\/\/api\.foxapis\.com\//);
+});
+
+// ---- limits (task 15) -----------------------------------------------------------
+
+test('request body over 100 KB returns 413', async () => {
+  limiter.reset();
+  const bigBody = 'x'.repeat(100 * 1024 + 1);
+  const req = new Request('https://scriptsold.com/compat/api/v2/linkedin', {
+    method: 'POST',
+    headers: new Headers({ Authorization: 'Bearer k', 'Content-Type': 'application/json' }),
+    body: bigBody,
+  });
+  const res = await onRequest({ request: req });
+  assert.equal(res.status, 413);
+  assert.equal(res.headers.get('Cache-Control'), 'no-store');
+});
+
+test('Content-Length over 100 KB returns 413 without reading body', async () => {
+  limiter.reset();
+  const req = new Request('https://scriptsold.com/compat/api/v2/linkedin', {
+    method: 'POST',
+    headers: new Headers({ Authorization: 'Bearer k', 'Content-Length': String(100 * 1024 + 1), 'Content-Type': 'application/json' }),
+    body: '{}',
+  });
+  const res = await onRequest({ request: req });
+  assert.equal(res.status, 413);
+});
+
+test('per-IP rate limit: 31st request returns 429 with Retry-After', async () => {
+  // Use a unique IP so this test does not interfere with others.
+  limiter.reset();
+  const ip = '203.0.113.42';
+  const headers = { Authorization: 'Bearer k', 'X-Resurrect-Sample': '1', 'CF-Connecting-IP': ip };
+  for (let i = 0; i < 30; i += 1) {
+    const res = await onRequest(ctx('/compat/api/v2/linkedin', { headers }));
+    assert.equal(res.status, 200, `request ${i + 1} should pass`);
+  }
+  const res = await onRequest(ctx('/compat/api/v2/linkedin', { headers }));
+  assert.equal(res.status, 429);
+  assert.ok(res.headers.get('Retry-After'), 'Retry-After header present');
+  assert.equal(res.headers.get('Cache-Control'), 'no-store');
+  const json = await res.json();
+  assert.ok(json.detail);
+  limiter.reset();
+});
+
+test('rate limit: README mentions per-instance caveat', () => {
+  const readme = readFileSync(join(root, 'README.md'), 'utf8');
+  assert.match(readme, /per server instance/);
 });

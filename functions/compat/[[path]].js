@@ -3,6 +3,7 @@
 //
 // Task 13: sample mode — X-Resurrect-Sample: 1 returns a recorded fixture.
 // Task 14: live path  — forwards bearer key to FoxAPIs, translates response.
+// Task 15: limits     — 100 KB request body (413), 30 req/10 min per IP (429).
 //
 // Security:
 //   - Keys are forwarded and immediately discarded; never stored or logged.
@@ -13,8 +14,14 @@
 import { loadData } from '../../src/node.js';
 import { translate } from '../../src/compat/translate.js';
 import { enrichPersonSample, findEmailNoMatch } from '../../src/compat/fixtures.js';
+import { RateLimiter } from '../../src/compat/rate-limit.js';
 
 const FOXAPIS_BASE = 'https://api.foxapis.com';
+const MAX_BODY_BYTES = 100 * 1024; // 100 KB (R1.4)
+
+// One shared limiter per isolate / process instance.
+// See README: this is per-instance; across scaled deployments the effective limit is higher.
+export const limiter = new RateLimiter({ limit: 30, windowMs: 10 * 60 * 1000 });
 
 // Map: old path pattern -> { endpoint registry id, sample fixture, params extractor }
 const ROUTE_TABLE = [
@@ -24,12 +31,13 @@ const ROUTE_TABLE = [
     sampleBody: enrichPersonSample.response,
     creditsUsed: enrichPersonSample.run.credits,
     // Extract params from old-style request (query string for GET, body for POST)
-    extractParams: async (request) => {
+    extractParams: async (request, rawBody) => {
       const url = new URL(request.url);
       const q = url.searchParams;
       if (request.method === 'POST') {
         try {
-          const b = await request.json();
+          const text = rawBody ? new TextDecoder().decode(rawBody) : await request.text();
+          const b = JSON.parse(text);
           return { name: b.name, company: b.company, domain: b.domain, url: b.url || b.linkedin_url };
         } catch { return {}; }
       }
@@ -50,12 +58,13 @@ const ROUTE_TABLE = [
     pattern: /^\/(compat\/)?(proxycurl\/)?api\/linkedin\/profile\/email\/?$/,
     sampleBody: findEmailNoMatch.response,
     creditsUsed: findEmailNoMatch.response.credits_used,
-    extractParams: async (request) => {
+    extractParams: async (request, rawBody) => {
       const url = new URL(request.url);
       const q = url.searchParams;
       if (request.method === 'POST') {
         try {
-          const b = await request.json();
+          const text = rawBody ? new TextDecoder().decode(rawBody) : await request.text();
+          const b = JSON.parse(text);
           return { website: b.website, name: b.name };
         } catch { return {}; }
       }
@@ -111,6 +120,32 @@ export async function onRequest(context) {
     return jsonResponse(oldError('This path is not served by Resurrect. Check the docs for supported compat routes.'), 404);
   }
 
+  // Request body size limit: 100 KB (R1.4). Check Content-Length first; if absent, read and check.
+  const contentLength = Number(request.headers.get('Content-Length') || '0');
+  if (contentLength > MAX_BODY_BYTES) {
+    return jsonResponse(oldError('Request body is larger than 100 KB.'), 413);
+  }
+  // For POST requests without Content-Length, buffer and check.
+  let rawBody = null;
+  if (request.method === 'POST') {
+    try {
+      rawBody = await request.arrayBuffer();
+      if (rawBody.byteLength > MAX_BODY_BYTES) {
+        return jsonResponse(oldError('Request body is larger than 100 KB.'), 413);
+      }
+    } catch {
+      rawBody = null;
+    }
+  }
+
+  // Per-IP rate limit: 30 requests per 10 minutes (R6.3).
+  // CF-Connecting-IP is set by Cloudflare; fall back to a placeholder in tests.
+  const ip = request.headers.get('CF-Connecting-IP') || request.headers.get('X-Forwarded-For') || 'unknown';
+  const rate = limiter.check(ip);
+  if (!rate.ok) {
+    return jsonResponse(oldError('Too many requests. Try again later.'), 429, { 'Retry-After': String(rate.retryAfter) });
+  }
+
   // Load registry endpoint definition once per request.
   const { registry } = loadData();
   const api = registry.apis.find((a) => a.id === 'proxycurl');
@@ -146,7 +181,7 @@ export async function onRequest(context) {
   // ---- Live path ---------------------------------------------------------
 
   // Parse and validate old params before spending any credits (422).
-  const params = await route.extractParams(request);
+  const params = await route.extractParams(request, rawBody);
   for (const p of route.requiredParams) {
     if (!params[p]) {
       return jsonResponse(
