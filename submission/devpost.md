@@ -21,7 +21,7 @@ Source repository (public, MIT licence, .kiro folder at the root and not ignored
 
 Resurrection.
 
-Why: the whole project is about reviving things that were switched off. Developers have old scripts that still call APIs that have been shut down (Proxycurl, the Clearbit Logo API, the Bing Search APIs, the Instagram Basic Display API and others). Resurrect finds those calls, brings back the ones that have a living replacement, and gives the rest an honest burial: a tombstone, the date, and the vendor's own notice.
+Why: the whole project is about reviving things that were switched off. Developers have old scripts that still call APIs that have been shut down. The registry in the repository (docs/REGISTRY.md) lists each one by name, with its status and the vendor's own notice. Resurrect finds those calls, brings back the ones that have a living replacement, and gives the rest an honest burial: a tombstone, the date, and the vendor's own notice.
 
 ## Tagline
 
@@ -29,7 +29,7 @@ Paste code that calls a dead API. Get it back to life, or an honest tombstone.
 
 ## The story
 
-A script worked for years. Then an API behind it was switched off: Proxycurl ended, and so did the Clearbit Logo API. (Clearbit Enrichment is different: it moved, with no published end date, and Resurrect says exactly that.) The code still describes a useful job, but its calls lead nowhere or to an uncertain future. Resurrect brings that code back to life by rewriting a call onto a live FoxAPIs endpoint where one matches. The generated code hands back the old field names, with null and a reason where it cannot fill one. Where nothing matches, it says so. There is no hosted compatibility endpoint today. Plans and pricing: https://foxapis.com
+A script worked for years. Then an API behind it was switched off. (Some APIs only moved, with no published end date, and Resurrect says exactly that.) The code still describes a useful job, but its calls lead nowhere or to an uncertain future. Resurrect brings that code back to life by rewriting a call onto a live FoxAPIs endpoint where one matches. The generated code hands back the old field names, with null and a reason where it cannot fill one. Where nothing matches, it says so. There is no hosted compatibility endpoint today. Plans and pricing: https://foxapis.com
 
 ## What it does
 
@@ -107,7 +107,7 @@ Locally: npm test, then open public/index.html through any static server (npx se
 - [ ] Status line above says LIVE (deploy script ran and its curl check passed)
 - [ ] Kiro has really implemented work from tasks.md, and submission/kiro-usage.md and the section above were updated to say exactly what
 - [ ] Demo video is under 3 minutes, public on YouTube, no unlicensed music (script: submission/demo-script.md)
-- [ ] Third-party names in the video: the rules forbid third-party trademarks without permission, and the script shows names of dead services. Decide whether to keep them (they only say which service the code calls), hide them, or ask the hackathon manager
+- [ ] Third-party names in the video: the rules forbid third-party trademarks without permission. The script speaks none, and the names the app and code show on screen are to be covered as listed under Covers in submission/demo-script.md. Step through the finished video and check that none is readable
 - [ ] A working application address is in the form (the rules require a functional application URL)
 - [ ] New-project rule: the first commit here is dated 2026-11-23, inside the submission period that began October 30; disclose any earlier code brought in
 - [ ] Repository is public on GitHub with the MIT licence visible and .kiro at the root (git check-ignore -v .kiro prints nothing)
