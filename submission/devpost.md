@@ -1,6 +1,12 @@
 # Devpost submission draft: Resurrect (scriptsold)
 
-Draft written 2026-11-23. Not submitted. Fill the form from this file after the checks at the bottom pass.
+Draft written 2026-11-23, updated 2026-11-25. Not submitted. Fill the form from this file after the checks at the bottom pass. Lines starting [SAUL: are blanks for you to fill; remove them before pasting.
+
+From the official rules (read 2026-11-25): submissions close December 4, 2026, 2:00 pm Pacific (December 5, 7:00 am Japan time). Kiro credit requests close December 1, 12:00 pm Pacific.
+
+## Name
+
+Resurrect (scriptsold)
 
 ## Status of the working app
 
@@ -20,6 +26,10 @@ Why: the whole project is about reviving things that were switched off. Develope
 ## Tagline
 
 Paste code that calls a dead API. Get it back to life, or an honest tombstone.
+
+## The story
+
+A script worked for years. Then an API behind it was switched off: Proxycurl ended, and so did the Clearbit Logo API. (Clearbit Enrichment is different: it moved, with no published end date, and Resurrect says exactly that.) The code still describes a useful job, but its calls lead nowhere or to an uncertain future. Resurrect brings that code back to life by rewriting a call onto a live FoxAPIs endpoint where one matches. The generated code hands back the old field names, with null and a reason where it cannot fill one. Where nothing matches, it says so. There is no hosted compatibility endpoint today. Plans and pricing: https://foxapis.com
 
 ## What it does
 
@@ -41,6 +51,34 @@ The full table is in submission/kiro-usage.md. Short version:
 - MCP and powers: not used.
 
 What Kiro produced and what it did not: the specs, steering and hook were drafted by an AI coding agent as inputs, and the engine in src/, the page and the tests were written by an AI coding agent working from those specs. As of this draft no code was written by Kiro and the tasks in tasks.md are not ticked. That is why this draft is not ready to submit: the hackathon requires an app built with Kiro. See the checks below.
+
+### Blanks for what Kiro actually did
+
+Fill only with things that happened. Delete any line that did not.
+
+- [SAUL: which Kiro app you used (IDE, CLI, Web, Crew), and how they differed if more than one]
+- [SAUL: spec-driven development: which tasks in tasks.md Kiro implemented, with commit ids, and how that compared with vibe coding]
+- [SAUL: agent hooks: whether the run-tests-on-save hook fired, and what it caught or saved]
+- [SAUL: steering: which steering rule changed what Kiro produced]
+- [SAUL: property-based testing: whether it caught anything while Kiro worked]
+- [SAUL: custom agents, MCP, powers: say which you used, or not used]
+
+## Challenges
+
+- Dating each shutdown from a linked notice, and keeping ended, scheduled and moved apart, so nothing still running is called dead.
+- Never inventing a field: where FoxAPIs has no value, the old field comes back as null with a reason.
+- Replacing a whole call inside a file without touching the lines around it.
+- Testing generated code without spending credits: it runs against recorded responses.
+- [SAUL: a challenge from your own Kiro sessions]
+
+## What is next
+
+Ideas, not built yet:
+
+- A compatibility endpoint that accepts the old request and returns the old response shape.
+- More dead APIs in the registry, each with a dated source.
+- In-place replacement for more languages.
+- A re-check of every source link.
 
 ## Built with
 
@@ -68,6 +106,9 @@ Locally: npm test, then open public/index.html through any static server (npx se
 
 - [ ] Status line above says LIVE (deploy script ran and its curl check passed)
 - [ ] Kiro has really implemented work from tasks.md, and submission/kiro-usage.md and the section above were updated to say exactly what
-- [ ] Demo video is under 3 minutes, public, no unlicensed music (script: submission/demo-script.md)
+- [ ] Demo video is under 3 minutes, public on YouTube, no unlicensed music (script: submission/demo-script.md)
+- [ ] Third-party names in the video: the rules forbid third-party trademarks without permission, and the script shows names of dead services. Decide whether to keep them (they only say which service the code calls), hide them, or ask the hackathon manager
+- [ ] A working application address is in the form (the rules require a functional application URL)
+- [ ] New-project rule: the first commit here is dated 2026-11-23, inside the submission period that began October 30; disclose any earlier code brought in
 - [ ] Repository is public on GitHub with the MIT licence visible and .kiro at the root (git check-ignore -v .kiro prints nothing)
 - [ ] Every statement in this file still matches the repository
